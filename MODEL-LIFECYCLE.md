@@ -1,6 +1,6 @@
 # AI model shutdown dates and official replacements
 
-Machine-readable lifecycle data for 111 exact model IDs and aliases, checked against provider documentation on 2026-08-07.
+Machine-readable lifecycle data for 124 exact model IDs and aliases, checked against provider documentation on 2026-08-14.
 
 Provider documentation is the only source of truth. A listed replacement can still differ in behavior, quality, latency, price, limits, or supported parameters. `medium` and `low` replacement confidence are report-only by default.
 
@@ -132,9 +132,32 @@ Use the [free SunsetPR GitHub Action](README.md#start-in-one-minute) to find the
 | `gemini-3.1-flash-lite` | deprecated | 2027-05-07 | `gemini-3.5-flash-lite` | high | [Official documentation](https://ai.google.dev/gemini-api/docs/deprecations) |
 | `gemini-embedding-001` | deprecated | 2028-05-14 | `gemini-embedding-2` | high | [Official documentation](https://ai.google.dev/gemini-api/docs/deprecations) |
 
+## Cohere
+
+| Model ID | Status | Shutdown date | Official replacement | Confidence | Primary source |
+| --- | --- | --- | --- | --- | --- |
+| `c4ai-aya-expanse-8b` | retired | 2026-04-04 | `command-a-03-2025` | medium | [Official documentation](https://docs.cohere.com/docs/deprecations) |
+| `c4ai-aya-vision-8b` | retired | 2026-04-04 | `command-a-03-2025` | medium | [Official documentation](https://docs.cohere.com/docs/deprecations) |
+| `embed-english-light-v2.0` | retired | 2026-04-04 | `embed-v4.0` | medium | [Official documentation](https://docs.cohere.com/docs/deprecations) |
+| `embed-english-v2.0` | retired | 2026-04-04 | `embed-v4.0` | medium | [Official documentation](https://docs.cohere.com/docs/deprecations) |
+| `embed-multilingual-v2.0` | retired | 2026-04-04 | `embed-v4.0` | medium | [Official documentation](https://docs.cohere.com/docs/deprecations) |
+
+## xAI
+
+| Model ID | Status | Shutdown date | Official replacement | Confidence | Primary source |
+| --- | --- | --- | --- | --- | --- |
+| `grok-3` | retired | 2026-05-15 | `grok-4.3` | medium | [Official documentation](https://docs.x.ai/developers/migration/may-15-retirement) |
+| `grok-4-0709` | retired | 2026-05-15 | `grok-4.3` | medium | [Official documentation](https://docs.x.ai/developers/migration/may-15-retirement) |
+| `grok-4-1-fast-non-reasoning` | retired | 2026-05-15 | `grok-4.3` | medium | [Official documentation](https://docs.x.ai/developers/migration/may-15-retirement) |
+| `grok-4-1-fast-reasoning` | retired | 2026-05-15 | `grok-4.3` | medium | [Official documentation](https://docs.x.ai/developers/migration/may-15-retirement) |
+| `grok-4-fast-non-reasoning` | retired | 2026-05-15 | `grok-4.3` | medium | [Official documentation](https://docs.x.ai/developers/migration/may-15-retirement) |
+| `grok-4-fast-reasoning` | retired | 2026-05-15 | `grok-4.3` | medium | [Official documentation](https://docs.x.ai/developers/migration/may-15-retirement) |
+| `grok-code-fast-1` | retired | 2026-05-15 | `grok-build-0.1` | medium | [Official documentation](https://docs.x.ai/developers/migration/may-15-retirement) |
+| `grok-imagine-image-pro` | retired | 2026-05-15 | `grok-imagine-image-quality` | medium | [Official documentation](https://docs.x.ai/developers/migration/may-15-retirement) |
+
 ## Data boundaries
 
 - `deprecated` means the provider has announced deprecation; a shutdown date can still be unannounced.
 - `retired` means the published shutdown date has passed.
 - A dynamic value that static analysis cannot resolve is never classified as unaffected; SunsetPR reports `runtime confirmation required`.
-- SunsetPR is independent of OpenAI, Anthropic, Google, and GitHub.
+- SunsetPR is independent of OpenAI, Anthropic, Google, Cohere, xAI, and GitHub.

@@ -8,6 +8,8 @@ const providerNames = {
   openai: "OpenAI",
   anthropic: "Anthropic",
   gemini: "Google Gemini",
+  cohere: "Cohere",
+  xai: "xAI",
 };
 
 const database = JSON.parse(await readFile(databaseUrl, "utf8"));
@@ -22,7 +24,7 @@ const lines = [
   "",
 ];
 
-for (const provider of ["openai", "anthropic", "gemini"]) {
+for (const provider of ["openai", "anthropic", "gemini", "cohere", "xai"]) {
   const entries = database.entries
     .filter((entry) => entry.provider === provider)
     .sort(
@@ -52,7 +54,7 @@ lines.push(
   "- `deprecated` means the provider has announced deprecation; a shutdown date can still be unannounced.",
   "- `retired` means the published shutdown date has passed.",
   "- A dynamic value that static analysis cannot resolve is never classified as unaffected; SunsetPR reports `runtime confirmation required`.",
-  "- SunsetPR is independent of OpenAI, Anthropic, Google, and GitHub.",
+  "- SunsetPR is independent of OpenAI, Anthropic, Google, Cohere, xAI, and GitHub.",
   "",
 );
 

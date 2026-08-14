@@ -6,7 +6,7 @@
 [![Latest release](https://img.shields.io/github/v/release/synergia-yoshi/sunsetpr-action)](https://github.com/synergia-yoshi/sunsetpr-action/releases/latest)
 [![License](https://img.shields.io/github/license/synergia-yoshi/sunsetpr-action)](LICENSE)
 
-Catch deprecated OpenAI, Anthropic, and Google Gemini model IDs and selected API surfaces in CI
+Catch deprecated OpenAI, Anthropic, Google Gemini, Cohere, and xAI model IDs and selected API surfaces in CI
 before their shutdown date.
 
 SunsetPR reports the exact file and line, shutdown date, official replacement or migration path,
@@ -14,6 +14,27 @@ confidence, and provider-owned documentation. Dynamic model selection is never r
 “unaffected”; it is marked for runtime confirmation. API redesigns remain report-only.
 
 **Proof, not a screenshot:** inspect the [public demo scan workflow](https://github.com/synergia-yoshi/sunsetpr-demo/actions/workflows/sunsetpr.yml) and the [draft repair PR it complements](https://github.com/synergia-yoshi/sunsetpr-demo/pull/2). The PR shows the generated diff, migration invariants, official evidence, skipped checks, and repository CI in public.
+
+## 日本語: 何をするActionか
+
+SunsetPRは、通知だけで終わらせず、影響箇所を見つけ、検証可能な修正PRを用意するためのGitHub Actionです。
+無料Actionはリポジトリ内で、終了予定のAIモデル名・終了するAPI・該当ファイル・公式根拠・実行時の確認が必要な箇所を表示します。
+修正が必要な場合は、限定ベータで公式根拠、変更差分、置き換え漏れの検査、既存CIの結果を添えた**確認待ちの修正PR**を作成します。
+
+動的な環境変数、リモート設定、計算で組み立てたモデル名は「影響なし」と断定しません。
+実行時の確認が必要な箇所として残します。
+公式の後継モデルでも、品質・料金・待ち時間・トークン上限・対応パラメータの互換性は保証しません。
+
+## 日本語: 最短導入
+
+次の内容を `.github/workflows/model-lifecycle.yml` として保存し、通常のプルリクエストまたはpushで実行します。
+最初は `fail-on: never` のまま、検出結果だけを確認してください。
+レビュー済み公開版 `v0.2.0` はOpenAI、Anthropic、Google Geminiが対象です。
+このソースの `v0.3.0` 候補ではCohereとxAIの公式ライフサイクル情報も追加していますが、公開リリース前のため、利用時は下の固定SHAを変更しないでください。
+
+実行後はGitHub ActionsのJob Summary、`.sunsetpr/report.json`、`.sunsetpr/summary.md` に、終了日・影響箇所・公式URL・次の判断を出力します。
+無料Actionは `contents: read` だけを要求し、リポジトリのコードをSunsetPRや外部AIへ送信しません。
+自動マージや本番公開は行いません。
 
 ## Start in one minute
 
@@ -56,22 +77,22 @@ The first run adds line annotations and a structured table to the GitHub Actions
 - OpenAI reusable prompt objects and Evals API calls before the 2026-11-30 shutdown
 - Anthropic sampling parameters that an official successor rejects
 - legacy Gemini Python `GenerativeModel("…")` call shapes
-- OpenAI, Anthropic, and Google Gemini entries verified against official provider documentation
+- OpenAI, Anthropic, Google Gemini, Cohere, and xAI entries verified against official provider documentation
 - unresolved SDK arguments that require runtime confirmation
 
-The bundled database currently contains 111 exact model IDs and aliases plus 4 API surfaces,
-checked on 2026-08-07. Provider documentation is the only source of truth.
+The bundled database currently contains 124 exact model IDs and aliases plus 4 API surfaces,
+checked on 2026-08-14. Provider documentation is the only source of truth.
 
 [Browse model shutdown dates](MODEL-LIFECYCLE.md), inspect the
 [API deprecation evaluation](API-DEPRECATION-EVALUATION.md), or consume the canonical
 [`data/lifecycle.json`](data/lifecycle.json).
 
 The same official-source data also powers
-[111 model shutdown pages](https://synergia-yoshi.github.io/sunsetpr-action/models/) and
+[124 model shutdown pages](https://synergia-yoshi.github.io/sunsetpr-action/models/) and
 [4 API shutdown pages](https://synergia-yoshi.github.io/sunsetpr-action/apis/) on GitHub Pages.
 The pages are generated and count-checked in public CI; they do not add tracking or another source.
 
-The maintainer workflow fetches only the three configured provider-owned pages each week. It verifies that every current ID, shutdown date, and replacement remains represented and compares semantic model/date fingerprints. Drift opens one refreshable GitHub issue; it never rewrites lifecycle data without an official-source review.
+The maintainer workflow fetches only the five configured provider-owned pages each week. It verifies that every current ID, shutdown date, and replacement remains represented and compares semantic model/date fingerprints. Drift opens one refreshable GitHub issue; it never rewrites lifecycle data without an official-source review.
 
 ## Inputs
 
@@ -117,7 +138,7 @@ Static analysis cannot prove the deployed value of an environment variable, a da
 
 An official replacement can still differ in behavior, quality, latency, price, token limits, or supported parameters. The free Action does not edit code. Detection confidence is separate from replacement confidence; both must be high before the repair product considers a finding eligible for a deterministic edit. Preview or ambiguous successors are not considered safe automatic fixes.
 
-The repository includes 242 labeled positive and 242 labeled negative synthetic cases and currently measures 100% recall and 0% false-positive rate. It is a reproducible regression suite, not a claim about all real repositories.
+The repository includes 268 labeled positive and 268 labeled negative synthetic cases and currently measures 100% recall and 0% false-positive rate. It is a reproducible regression suite, not a claim about all real repositories.
 
 ```bash
 npm ci
@@ -161,4 +182,4 @@ notes and public CI before updating both the SHA and its version comment. The im
 tag is available for readability; use floating `@v0` only when automatic compatible-beta updates are
 an intentional tradeoff.
 
-Apache-2.0. SunsetPR is independent of OpenAI, Anthropic, Google, and GitHub.
+Apache-2.0. SunsetPR is independent of OpenAI, Anthropic, Google, Cohere, xAI, and GitHub.

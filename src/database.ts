@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { ApiLifecycleEntry, LifecycleDatabase, LifecycleEntry } from "./types.js";
 
-const PROVIDERS = new Set(["openai", "anthropic", "gemini"]);
+const PROVIDERS = new Set(["openai", "anthropic", "gemini", "cohere", "xai"]);
 const STATUSES = new Set(["deprecated", "retired"]);
 const CONFIDENCES = new Set(["high", "medium", "low"]);
 const OFFICIAL_SOURCES = {
@@ -18,6 +18,14 @@ const OFFICIAL_SOURCES = {
   gemini: {
     hostname: "ai.google.dev",
     pathname: "/gemini-api/docs/deprecations",
+  },
+  cohere: {
+    hostname: "docs.cohere.com",
+    pathname: "/docs/deprecations",
+  },
+  xai: {
+    hostname: "docs.x.ai",
+    pathname: "/developers/migration/may-15-retirement",
   },
 } as const;
 

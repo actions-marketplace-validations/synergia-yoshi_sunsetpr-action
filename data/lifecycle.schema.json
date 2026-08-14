@@ -62,7 +62,7 @@
           "notes"
         ],
         "properties": {
-          "provider": { "enum": ["openai", "anthropic", "gemini"] },
+          "provider": { "enum": ["openai", "anthropic", "gemini", "cohere", "xai"] },
           "modelId": { "type": "string", "minLength": 1 },
           "status": { "enum": ["deprecated", "retired"] },
           "shutdownDate": {

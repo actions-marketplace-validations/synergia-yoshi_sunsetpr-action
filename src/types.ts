@@ -1,4 +1,4 @@
-export type Provider = "openai" | "anthropic" | "gemini";
+export type Provider = "openai" | "anthropic" | "gemini" | "cohere" | "xai";
 export type LifecycleStatus = "deprecated" | "retired";
 export type Confidence = "high" | "medium" | "low";
 

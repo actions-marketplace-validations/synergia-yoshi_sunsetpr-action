@@ -1,7 +1,7 @@
 {
   "$schema": "./lifecycle.schema.json",
-  "version": 7,
-  "checkedAt": "2026-08-07",
+  "version": 8,
+  "checkedAt": "2026-08-14",
   "apiDeprecations": [
     {
       "provider": "openai",
@@ -1158,6 +1158,136 @@
       "sourceUrl": "https://ai.google.dev/gemini-api/docs/deprecations",
       "replacementConfidence": "medium",
       "notes": "Official recommendation is a preview model; report only by default."
+    },
+    {
+      "provider": "cohere",
+      "modelId": "embed-english-v2.0",
+      "status": "retired",
+      "shutdownDate": "2026-04-04",
+      "replacement": "embed-v4.0",
+      "sourceUrl": "https://docs.cohere.com/docs/deprecations",
+      "replacementConfidence": "medium",
+      "notes": "Official page lists several embedding alternatives; report only until workload-specific review."
+    },
+    {
+      "provider": "cohere",
+      "modelId": "embed-english-light-v2.0",
+      "status": "retired",
+      "shutdownDate": "2026-04-04",
+      "replacement": "embed-v4.0",
+      "sourceUrl": "https://docs.cohere.com/docs/deprecations",
+      "replacementConfidence": "medium",
+      "notes": "Official page lists several embedding alternatives; report only until workload-specific review."
+    },
+    {
+      "provider": "cohere",
+      "modelId": "embed-multilingual-v2.0",
+      "status": "retired",
+      "shutdownDate": "2026-04-04",
+      "replacement": "embed-v4.0",
+      "sourceUrl": "https://docs.cohere.com/docs/deprecations",
+      "replacementConfidence": "medium",
+      "notes": "Official page lists several embedding alternatives; report only until workload-specific review."
+    },
+    {
+      "provider": "cohere",
+      "modelId": "c4ai-aya-expanse-8b",
+      "status": "retired",
+      "shutdownDate": "2026-04-04",
+      "replacement": "command-a-03-2025",
+      "sourceUrl": "https://docs.cohere.com/docs/deprecations",
+      "replacementConfidence": "medium",
+      "notes": "Official page lists several chat alternatives; report only until workload-specific review."
+    },
+    {
+      "provider": "cohere",
+      "modelId": "c4ai-aya-vision-8b",
+      "status": "retired",
+      "shutdownDate": "2026-04-04",
+      "replacement": "command-a-03-2025",
+      "sourceUrl": "https://docs.cohere.com/docs/deprecations",
+      "replacementConfidence": "medium",
+      "notes": "Official page lists several chat alternatives; report only until workload-specific review."
+    },
+    {
+      "provider": "xai",
+      "modelId": "grok-4-1-fast-reasoning",
+      "status": "retired",
+      "shutdownDate": "2026-05-15",
+      "replacement": "grok-4.3",
+      "sourceUrl": "https://docs.x.ai/developers/migration/may-15-retirement",
+      "replacementConfidence": "medium",
+      "notes": "Official redirect changes the model and reasoning effort; report only."
+    },
+    {
+      "provider": "xai",
+      "modelId": "grok-4-1-fast-non-reasoning",
+      "status": "retired",
+      "shutdownDate": "2026-05-15",
+      "replacement": "grok-4.3",
+      "sourceUrl": "https://docs.x.ai/developers/migration/may-15-retirement",
+      "replacementConfidence": "medium",
+      "notes": "Official redirect changes the model and reasoning effort; report only."
+    },
+    {
+      "provider": "xai",
+      "modelId": "grok-4-fast-reasoning",
+      "status": "retired",
+      "shutdownDate": "2026-05-15",
+      "replacement": "grok-4.3",
+      "sourceUrl": "https://docs.x.ai/developers/migration/may-15-retirement",
+      "replacementConfidence": "medium",
+      "notes": "Official redirect changes the model and reasoning effort; report only."
+    },
+    {
+      "provider": "xai",
+      "modelId": "grok-4-fast-non-reasoning",
+      "status": "retired",
+      "shutdownDate": "2026-05-15",
+      "replacement": "grok-4.3",
+      "sourceUrl": "https://docs.x.ai/developers/migration/may-15-retirement",
+      "replacementConfidence": "medium",
+      "notes": "Official redirect changes the model and reasoning effort; report only."
+    },
+    {
+      "provider": "xai",
+      "modelId": "grok-4-0709",
+      "status": "retired",
+      "shutdownDate": "2026-05-15",
+      "replacement": "grok-4.3",
+      "sourceUrl": "https://docs.x.ai/developers/migration/may-15-retirement",
+      "replacementConfidence": "medium",
+      "notes": "Official redirect changes the model and reasoning effort; report only."
+    },
+    {
+      "provider": "xai",
+      "modelId": "grok-code-fast-1",
+      "status": "retired",
+      "shutdownDate": "2026-05-15",
+      "replacement": "grok-build-0.1",
+      "sourceUrl": "https://docs.x.ai/developers/migration/may-15-retirement",
+      "replacementConfidence": "medium",
+      "notes": "Official redirect changes coding-model behavior; report only."
+    },
+    {
+      "provider": "xai",
+      "modelId": "grok-3",
+      "status": "retired",
+      "shutdownDate": "2026-05-15",
+      "replacement": "grok-4.3",
+      "sourceUrl": "https://docs.x.ai/developers/migration/may-15-retirement",
+      "replacementConfidence": "medium",
+      "notes": "Official redirect changes model behavior; report only."
+    },
+    {
+      "provider": "xai",
+      "modelId": "grok-imagine-image-pro",
+      "status": "retired",
+      "shutdownDate": "2026-05-15",
+      "replacement": "grok-imagine-image-quality",
+      "sourceUrl": "https://docs.x.ai/developers/migration/may-15-retirement",
+      "replacementConfidence": "medium",
+      "notes": "Official redirect changes image generation behavior and pricing; report only."
     }
   ]
 }

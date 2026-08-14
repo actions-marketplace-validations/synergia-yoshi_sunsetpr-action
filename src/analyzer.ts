@@ -105,7 +105,14 @@ function providerEvidence(content: string, provider: Provider): boolean {
       return /(?:@google\/(?:generative-ai|genai)|google\.generativeai|\bGoogleGenerativeAI\b|\bGeminiClient\b|\bgenai\b)/.test(
         content,
       );
+    case "cohere":
+      return /(?:cohere-ai|from\s+cohere\b|import\s+cohere\b|\bCohereClient(?:V2)?\b)/.test(
+        content,
+      );
+    case "xai":
+      return /https:\/\/api\.x\.ai(?:\/|["'])/.test(content);
   }
+  return false;
 }
 
 function detectSdkCall(text: string, content: string): SdkCall | null {
@@ -115,9 +122,16 @@ function detectSdkCall(text: string, content: string): SdkCall | null {
     /\bChatCompletion\.create\s*\(/.test(text)
   ) {
     return {
-      provider: "openai",
-      name: /\.runTools\s*\(/.test(text) ? "OpenAI runTools" : "OpenAI create",
+      provider: providerEvidence(content, "xai") ? "xai" : "openai",
+      name: providerEvidence(content, "xai")
+        ? "xAI OpenAI-compatible"
+        : /\.runTools\s*\(/.test(text)
+          ? "OpenAI runTools"
+          : "OpenAI create",
     };
+  }
+  if (/\.(?:v2\.)?(?:chat|embed|rerank)\s*\(/.test(text) && providerEvidence(content, "cohere")) {
+    return { provider: "cohere", name: "Cohere v2" };
   }
   if (/\.messages\.create\s*\(/.test(text) && providerEvidence(content, "anthropic")) {
     return { provider: "anthropic", name: "Anthropic Messages" };

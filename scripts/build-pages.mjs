@@ -16,6 +16,8 @@ const providerLabels = {
   openai: "OpenAI",
   anthropic: "Anthropic",
   gemini: "Google Gemini",
+  cohere: "Cohere",
+  xai: "xAI",
 };
 
 function html(value) {
@@ -98,7 +100,7 @@ await writeFile(
 await copyFile("assets/og.png", path.join(outputRoot, "assets/og.png"));
 
 const homeDescription =
-  "Search OpenAI, Anthropic, and Google Gemini model and API shutdown dates, official replacements, and primary-source evidence.";
+  "Search OpenAI, Anthropic, Google Gemini, Cohere, and xAI model and API shutdown dates, official replacements, and primary-source evidence.";
 const home = shell({
   title: "AI model shutdown dates and migration evidence — SunsetPR",
   description: homeDescription,
@@ -167,7 +169,7 @@ const catalog = shell({
   canonical: `${baseUrl}/models/`,
   relativeRoot: "../",
   body: `<section class="catalog-head">
-  <div><p class="tag">OpenAI · Anthropic · Gemini</p><h1>AI model lifecycle database</h1><p class="lead">Exact IDs, shutdown dates, official replacements, and provider-owned evidence. Checked ${html(database.checkedAt)}.</p></div>
+  <div><p class="tag">OpenAI · Anthropic · Gemini · Cohere · xAI</p><h1>AI model lifecycle database</h1><p class="lead">Exact IDs, shutdown dates, official replacements, and provider-owned evidence. Checked ${html(database.checkedAt)}.</p></div>
   <label><span class="tag">Filter exact IDs</span><input class="search" type="search" placeholder="e.g. gpt-4-turbo" data-search autocomplete="off"></label>
 </section>
 <div class="table" role="table">

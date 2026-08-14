@@ -33,6 +33,18 @@ const sources = {
     languageQuery: "en",
     tokenPattern: /\bgemini-[a-z0-9._-]{2,80}\b/g,
   },
+  cohere: {
+    url: "https://docs.cohere.com/docs/deprecations",
+    hostname: "docs.cohere.com",
+    pathPrefix: "/docs/deprecations",
+    tokenPattern: /\b(?:c4ai-aya|command|embed)[a-z0-9._-]{1,80}\b/g,
+  },
+  xai: {
+    url: "https://docs.x.ai/developers/migration/may-15-retirement",
+    hostname: "docs.x.ai",
+    pathPrefix: "/developers/migration/may-15-retirement",
+    tokenPattern: /\bgrok-[a-z0-9._-]{1,80}\b/g,
+  },
 };
 
 function sortedUnique(values) {
@@ -48,6 +60,7 @@ function fingerprint(html, tokenPattern) {
       /\b(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s+\d{1,2},\s+20\d{2}\b/g,
     ) ?? [];
   const normalizedWrittenDates = writtenDates
+    .map((value) => value.replace(/(\d{1,2})(?:st|nd|rd|th),/i, "$1,"))
     .map((value) => new Date(`${value} UTC`))
     .filter((value) => !Number.isNaN(value.getTime()))
     .map((value) => value.toISOString().slice(0, 10));
@@ -76,6 +89,23 @@ function sourceRepresentsDate(html, isoDate) {
       timeZone: "UTC",
     }).format(date),
   ];
+  const suffix =
+    day % 10 === 1 && day % 100 !== 11
+      ? "st"
+      : day % 10 === 2 && day % 100 !== 12
+        ? "nd"
+        : day % 10 === 3 && day % 100 !== 13
+          ? "rd"
+          : "th";
+  formats.push(
+    new Intl.DateTimeFormat("en-US", {
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
+    })
+      .format(date)
+      .replace(/\s+20\d{2}$/, ` ${day}${suffix}, ${year}`),
+  );
   const lowerCaseHtml = html.toLowerCase();
   return formats.some((value) => lowerCaseHtml.includes(value.toLowerCase()));
 }
@@ -151,7 +181,7 @@ const report = [
   "",
   `Checked: ${checkedAt}`,
   "",
-  "This monitor fetches only the three configured provider-owned lifecycle pages. It compares model-like tokens and ISO dates with a committed semantic baseline, and verifies that every current database entry remains represented.",
+  "This monitor fetches only the five configured provider-owned lifecycle pages. It compares model-like tokens and ISO dates with a committed semantic baseline, and verifies that every current database entry remains represented.",
   "",
 ];
 let failed = false;

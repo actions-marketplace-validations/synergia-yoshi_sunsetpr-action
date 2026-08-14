@@ -36,6 +36,24 @@ test("accepts an official source and a currently supported replacement", async (
   assert.equal(database.entries.length, 1);
 });
 
+test("accepts official Cohere and xAI lifecycle sources", async () => {
+  const databasePath = await writeDatabase([
+    entry({
+      provider: "cohere",
+      modelId: "embed-english-v2.0",
+      sourceUrl: "https://docs.cohere.com/docs/deprecations",
+      replacementConfidence: "medium",
+    }),
+    entry({
+      provider: "xai",
+      modelId: "grok-4-0709",
+      sourceUrl: "https://docs.x.ai/developers/migration/may-15-retirement",
+      replacementConfidence: "medium",
+    }),
+  ]);
+  assert.equal((await loadDatabase(databasePath)).entries.length, 2);
+});
+
 test("loads all current report-only API surfaces", async () => {
   const database = await loadDatabase();
   assert.deepEqual(

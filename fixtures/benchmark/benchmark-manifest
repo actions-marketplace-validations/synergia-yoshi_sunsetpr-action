@@ -1209,6 +1209,136 @@
       "path": "positives/generated.py",
       "line": 111,
       "modelId": "gemini-robotics-er-1.5-preview"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 112,
+      "modelId": "embed-english-v2.0"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 112,
+      "modelId": "embed-english-v2.0"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 113,
+      "modelId": "embed-english-light-v2.0"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 113,
+      "modelId": "embed-english-light-v2.0"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 114,
+      "modelId": "embed-multilingual-v2.0"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 114,
+      "modelId": "embed-multilingual-v2.0"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 115,
+      "modelId": "c4ai-aya-expanse-8b"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 115,
+      "modelId": "c4ai-aya-expanse-8b"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 116,
+      "modelId": "c4ai-aya-vision-8b"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 116,
+      "modelId": "c4ai-aya-vision-8b"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 117,
+      "modelId": "grok-4-1-fast-reasoning"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 117,
+      "modelId": "grok-4-1-fast-reasoning"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 118,
+      "modelId": "grok-4-1-fast-non-reasoning"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 118,
+      "modelId": "grok-4-1-fast-non-reasoning"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 119,
+      "modelId": "grok-4-fast-reasoning"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 119,
+      "modelId": "grok-4-fast-reasoning"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 120,
+      "modelId": "grok-4-fast-non-reasoning"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 120,
+      "modelId": "grok-4-fast-non-reasoning"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 121,
+      "modelId": "grok-4-0709"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 121,
+      "modelId": "grok-4-0709"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 122,
+      "modelId": "grok-code-fast-1"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 122,
+      "modelId": "grok-code-fast-1"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 123,
+      "modelId": "grok-3"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 123,
+      "modelId": "grok-3"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 124,
+      "modelId": "grok-imagine-image-pro"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 124,
+      "modelId": "grok-imagine-image-pro"
     }
   ],
   "negatives": [
@@ -2179,6 +2309,110 @@
     {
       "path": "negatives/generated.py",
       "description": "unrelated display label for gemini-robotics-er-1.5-preview"
+    },
+    {
+      "path": "negatives/generated.ts",
+      "description": "unrelated documentation string for embed-english-v2.0"
+    },
+    {
+      "path": "negatives/generated.py",
+      "description": "unrelated display label for embed-english-v2.0"
+    },
+    {
+      "path": "negatives/generated.ts",
+      "description": "unrelated documentation string for embed-english-light-v2.0"
+    },
+    {
+      "path": "negatives/generated.py",
+      "description": "unrelated display label for embed-english-light-v2.0"
+    },
+    {
+      "path": "negatives/generated.ts",
+      "description": "unrelated documentation string for embed-multilingual-v2.0"
+    },
+    {
+      "path": "negatives/generated.py",
+      "description": "unrelated display label for embed-multilingual-v2.0"
+    },
+    {
+      "path": "negatives/generated.ts",
+      "description": "unrelated documentation string for c4ai-aya-expanse-8b"
+    },
+    {
+      "path": "negatives/generated.py",
+      "description": "unrelated display label for c4ai-aya-expanse-8b"
+    },
+    {
+      "path": "negatives/generated.ts",
+      "description": "unrelated documentation string for c4ai-aya-vision-8b"
+    },
+    {
+      "path": "negatives/generated.py",
+      "description": "unrelated display label for c4ai-aya-vision-8b"
+    },
+    {
+      "path": "negatives/generated.ts",
+      "description": "unrelated documentation string for grok-4-1-fast-reasoning"
+    },
+    {
+      "path": "negatives/generated.py",
+      "description": "unrelated display label for grok-4-1-fast-reasoning"
+    },
+    {
+      "path": "negatives/generated.ts",
+      "description": "unrelated documentation string for grok-4-1-fast-non-reasoning"
+    },
+    {
+      "path": "negatives/generated.py",
+      "description": "unrelated display label for grok-4-1-fast-non-reasoning"
+    },
+    {
+      "path": "negatives/generated.ts",
+      "description": "unrelated documentation string for grok-4-fast-reasoning"
+    },
+    {
+      "path": "negatives/generated.py",
+      "description": "unrelated display label for grok-4-fast-reasoning"
+    },
+    {
+      "path": "negatives/generated.ts",
+      "description": "unrelated documentation string for grok-4-fast-non-reasoning"
+    },
+    {
+      "path": "negatives/generated.py",
+      "description": "unrelated display label for grok-4-fast-non-reasoning"
+    },
+    {
+      "path": "negatives/generated.ts",
+      "description": "unrelated documentation string for grok-4-0709"
+    },
+    {
+      "path": "negatives/generated.py",
+      "description": "unrelated display label for grok-4-0709"
+    },
+    {
+      "path": "negatives/generated.ts",
+      "description": "unrelated documentation string for grok-code-fast-1"
+    },
+    {
+      "path": "negatives/generated.py",
+      "description": "unrelated display label for grok-code-fast-1"
+    },
+    {
+      "path": "negatives/generated.ts",
+      "description": "unrelated documentation string for grok-3"
+    },
+    {
+      "path": "negatives/generated.py",
+      "description": "unrelated display label for grok-3"
+    },
+    {
+      "path": "negatives/generated.ts",
+      "description": "unrelated documentation string for grok-imagine-image-pro"
+    },
+    {
+      "path": "negatives/generated.py",
+      "description": "unrelated display label for grok-imagine-image-pro"
     }
   ]
 }

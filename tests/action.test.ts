@@ -1,15 +1,17 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { renderActionSummary, resolveReportPath } from "../src/action.js";
 import { analyzeCode } from "../src/analyzer.js";
 import { loadDatabase } from "../src/database.js";
 import { scanRepository } from "../src/scanner.js";
+import type { LifecycleEntry } from "../src/types.js";
 
 test("ships a current validated lifecycle database", async () => {
   const database = await loadDatabase();
-  assert.equal(database.checkedAt, "2026-08-07");
-  assert.equal(database.entries.length, 111);
-  assert.equal(new Set(database.entries.map((entry) => entry.modelId)).size, 111);
+  assert.equal(database.checkedAt, "2026-08-14");
+  assert.equal(database.entries.length, 124);
+  assert.equal(new Set(database.entries.map((entry) => entry.modelId)).size, 124);
   assert.equal(database.apiDeprecations.length, 4);
 });
 
@@ -35,6 +37,20 @@ test("rejects report paths that could inject GitHub output records", () => {
     /must not contain newline/,
   );
   assert.match(resolveReportPath(".sunsetpr/report.json"), /report\.json$/);
+});
+
+test("packages the checked-in Action runtime for GitHub-hosted Linux x64", async () => {
+  const packaging = await readFile("scripts/package-action.mjs", "utf8");
+  assert.match(packaging, /SUNSETPR_ACTION_PLATFORM\s*\?\?\s*"linux"/);
+  assert.match(packaging, /SUNSETPR_ACTION_ARCHITECTURE\s*\?\?\s*"x64"/);
+});
+
+test("documents installation and safety boundaries in Japanese", async () => {
+  const readme = await readFile("README.md", "utf8");
+  assert.match(readme, /## 日本語: 何をするActionか/);
+  assert.match(readme, /通知だけで終わらせず、影響箇所を見つけ/);
+  assert.match(readme, /## 日本語: 最短導入/);
+  assert.match(readme, /自動マージや本番公開は行いません/);
 });
 
 test("detects OpenAI runTools fallback IDs without hiding the dynamic override", async () => {
@@ -101,6 +117,60 @@ model.generate_content("hello")`,
 
   assert.equal(model?.confidence, "high");
   assert.equal(model?.sdk, "Gemini generate content");
+});
+
+test("detects Cohere and xAI calls only with provider-specific SDK evidence", () => {
+  const entries = new Map<string, LifecycleEntry>([
+    [
+      "embed-english-v2.0",
+      {
+        provider: "cohere",
+        modelId: "embed-english-v2.0",
+        status: "retired",
+        shutdownDate: "2026-04-04",
+        replacement: "embed-v4.0",
+        sourceUrl: "https://docs.cohere.com/docs/deprecations",
+        replacementConfidence: "medium",
+        notes: "Official alternatives require workload review.",
+      },
+    ],
+    [
+      "grok-4-0709",
+      {
+        provider: "xai",
+        modelId: "grok-4-0709",
+        status: "retired",
+        shutdownDate: "2026-05-15",
+        replacement: "grok-4.3",
+        sourceUrl: "https://docs.x.ai/developers/migration/may-15-retirement",
+        replacementConfidence: "medium",
+        notes: "The documented redirect changes behavior and needs review.",
+      },
+    ],
+  ]);
+  const cohere = analyzeCode(
+    "src/cohere.ts",
+    `import { CohereClientV2 } from "cohere-ai";
+const co = new CohereClientV2({ token: process.env.COHERE_API_KEY });
+await co.v2.embed({ model: "embed-english-v2.0", texts: ["hello"] });`,
+    entries,
+  );
+  const xai = analyzeCode(
+    "src/xai.ts",
+    `import OpenAI from "openai";
+const xai = new OpenAI({ baseURL: "https://api.x.ai/v1" });
+await xai.chat.completions.create({ model: "grok-4-0709", messages: [] });`,
+    entries,
+  );
+  const unrelated = analyzeCode(
+    "src/unrelated.ts",
+    `await anotherClient.send({ name: "grok-4-0709" });`,
+    entries,
+  );
+
+  assert.equal(cohere.find((finding) => finding.kind === "model_reference")?.sdk, "Cohere v2");
+  assert.equal(xai.find((finding) => finding.kind === "model_reference")?.sdk, "xAI OpenAI-compatible");
+  assert.deepEqual(unrelated, []);
 });
 
 test("reports a deprecated model whose shutdown date is not announced", async () => {
