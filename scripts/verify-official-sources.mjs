@@ -7,6 +7,10 @@ const baselineUrl = new URL("../data/official-source-fingerprints.json", import.
 const reportUrl = new URL("../.sunsetpr/official-source-check.md", import.meta.url);
 const writeBaseline = process.argv.includes("--write-baseline");
 const maximumResponseBytes = 2 * 1024 * 1024;
+const apiSourceTerms = {
+  "reusable-prompts-api": ["reusable prompt objects", "/v1/prompts"],
+  "evals-api": ["evals dashboard and api"],
+};
 
 const sources = {
   openai: {
@@ -164,19 +168,29 @@ for (const [provider, definition] of Object.entries(sources)) {
       .filter((entry) => !source.html.includes(entry.modelId))
       .map((entry) => entry.modelId);
     const missingDates = entries
-      .filter((entry) => !sourceRepresentsDate(source.html, entry.shutdownDate))
+      .filter(
+        (entry) =>
+          entry.shutdownDate !== null && !sourceRepresentsDate(source.html, entry.shutdownDate),
+      )
       .map((entry) => `${entry.modelId}: ${entry.shutdownDate}`);
     const missingReplacements = entries
       .filter((entry) => !source.html.includes(entry.replacement))
       .map((entry) => `${entry.modelId}: ${entry.replacement}`);
+    const lowerCaseSource = source.html.toLowerCase();
     const missingApiNames = apiEntries
-      .filter((entry) => !source.html.includes(entry.apiName))
+      .filter((entry) => {
+        const terms = apiSourceTerms[entry.apiId] ?? [entry.apiName];
+        return !terms.some((term) => lowerCaseSource.includes(term.toLowerCase()));
+      })
       .map((entry) => entry.apiName);
     const missingApiDates = apiEntries
       .filter((entry) => !sourceRepresentsDate(source.html, entry.shutdownDate))
       .map((entry) => `${entry.apiName}: ${entry.shutdownDate}`);
     const missingApiReplacements = apiEntries
-      .filter((entry) => entry.replacement && !source.html.includes(entry.replacement))
+      .filter(
+        (entry) =>
+          entry.replacement && !lowerCaseSource.includes(entry.replacement.toLowerCase()),
+      )
       .map((entry) => `${entry.apiName}: ${entry.replacement}`);
     const previous = baseline?.providers?.[provider];
     const tokenDrift = differences(signals.modelTokens, previous?.modelTokens ?? []);
@@ -194,7 +208,7 @@ for (const [provider, definition] of Object.entries(sources)) {
       missingApiNames.length > 0 ||
       missingApiDates.length > 0 ||
       missingApiReplacements.length > 0;
-    if ((!writeBaseline && !previous) || baselineDrift || coverageFailure) {
+    if ((!writeBaseline && (!previous || baselineDrift)) || coverageFailure) {
       failed = true;
     }
 

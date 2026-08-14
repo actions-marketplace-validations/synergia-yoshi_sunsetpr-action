@@ -3,11 +3,13 @@ import path from "node:path";
 import process from "node:process";
 import { pathToFileURL } from "node:url";
 import { loadDatabase } from "./database.js";
-import { renderScanText } from "./report.js";
+import { renderScanText, summarizeScanDecision } from "./report.js";
 import { scanRepository } from "./scanner.js";
 import type { Finding, ScanReport } from "./types.js";
+import { TOOL_VERSION } from "./version.js";
 
 const FAIL_THRESHOLDS = new Set(["never", "deprecated", "retired"]);
+export const DEFAULT_FAIL_ON = "never";
 const REPAIR_BETA_URL =
   "https://github.com/synergia-yoshi/sunsetpr-action/issues/new?template=repair-beta.yml";
 
@@ -54,7 +56,7 @@ function workflowCommandMessage(value: string): string {
 
 export function resolveReportPath(input: string): string {
   if (/[\r\n]/u.test(input)) {
-    throw new Error("Report path must not contain newline characters");
+    throw new Error("Output path must not contain newline characters");
   }
   return path.resolve(input);
 }
@@ -63,32 +65,50 @@ export function renderAnnotation(finding: Finding): string {
   const level =
     finding.kind === "runtime_check"
       ? "notice"
-      : finding.kind === "api_deprecation"
+      : finding.kind === "migration_risk"
         ? "warning"
-        : finding.status === "retired"
-          ? "error"
-          : "warning";
+        : finding.kind === "api_deprecation"
+          ? "warning"
+          : finding.status === "retired"
+            ? "error"
+            : "warning";
   const title =
     finding.kind === "runtime_check"
       ? "SunsetPR: runtime confirmation required"
-      : finding.kind === "api_deprecation"
-        ? "SunsetPR: deprecated API surface"
-        : `SunsetPR: ${finding.provider} model ${finding.status}`;
+      : finding.kind === "migration_risk"
+        ? "SunsetPR: deterministic migration risk"
+        : finding.kind === "api_deprecation"
+          ? "SunsetPR: deprecated API surface"
+          : `SunsetPR: ${finding.provider} model ${finding.status}`;
   const message =
     finding.kind === "runtime_check"
       ? finding.message
-      : finding.kind === "api_deprecation"
-        ? `${finding.apiId} → ${finding.replacement ?? "no official replacement listed"}; shutdown ${finding.shutdownDate}. Official source: ${finding.sourceUrl}`
-        : `${finding.modelId} → ${finding.replacement}; shutdown ${finding.shutdownDate}; replacement confidence ${finding.replacementConfidence}. Official source: ${finding.sourceUrl}`;
+      : finding.kind === "migration_risk"
+        ? `${finding.message} Official source: ${finding.sourceUrl}`
+        : finding.kind === "api_deprecation"
+          ? `${finding.apiId} → ${finding.replacement ?? "no official replacement listed"}; shutdown ${finding.shutdownDate}. Official source: ${finding.sourceUrl}`
+          : `${finding.modelId} → ${finding.replacement}; shutdown ${finding.shutdownDate ?? "not announced"}; replacement confidence ${finding.replacementConfidence}. Official source: ${finding.sourceUrl}`;
   return `::${level} file=${workflowCommandValue(finding.location.path)},line=${finding.location.line},col=${finding.location.column},title=${workflowCommandValue(title)}::${workflowCommandMessage(message)}`;
 }
 
 export function renderActionSummary(report: ScanReport): string {
+  const decision = summarizeScanDecision(report);
+  const decisionIcon =
+    decision.status === "urgent"
+      ? "🔴"
+      : decision.status === "review_required"
+        ? "🟠"
+        : decision.status === "repair_ready"
+          ? "🟡"
+          : "🟢";
+  const deadline = decision.nearestShutdownDate
+    ? `${decision.nearestShutdownDate}${decision.daysUntilShutdown === null ? "" : ` (${decision.daysUntilShutdown} day(s))`}`
+    : "none found";
   const modelFindings = report.findings.filter((finding) => finding.kind === "model_reference");
   const rows = modelFindings
     .map(
       (finding) =>
-        `| ${finding.status === "retired" ? "🔴 retired" : "🟠 deprecated"} | ${escapeMarkdown(finding.provider)} | ${inlineCode(finding.modelId)} | ${inlineCode(finding.replacement)} | ${finding.shutdownDate} | ${escapeMarkdown(finding.confidence)} | ${escapeMarkdown(finding.replacementConfidence)} | [official](${finding.sourceUrl}) | ${inlineCode(`${finding.location.path}:${finding.location.line}`)} |`,
+        `| ${finding.status === "retired" ? "🔴 retired" : "🟠 deprecated"} | ${escapeMarkdown(finding.provider)} | ${inlineCode(finding.modelId)} | ${inlineCode(finding.replacement)} | ${finding.shutdownDate ?? "Not announced"} | ${escapeMarkdown(finding.replacementConfidence)} | [official](${finding.sourceUrl}) | ${inlineCode(`${finding.location.path}:${finding.location.line}`)} |`,
     )
     .join("\n");
   const runtimeRows = report.findings
@@ -105,18 +125,32 @@ export function renderActionSummary(report: ScanReport): string {
         `- ${inlineCode(`${finding.location.path}:${finding.location.line}`)} — ${inlineCode(finding.apiId)} shuts down ${finding.shutdownDate}; ${finding.replacement ? `migrate to ${escapeMarkdown(finding.replacement)}` : "no official replacement is listed"} ([official](${finding.sourceUrl}))`,
     )
     .join("\n");
+  const migrationRiskRows = report.findings
+    .filter((finding) => finding.kind === "migration_risk")
+    .map(
+      (finding) =>
+        `- ${inlineCode(`${finding.location.path}:${finding.location.line}`)} — ${escapeMarkdown(finding.message)} ([official](${finding.sourceUrl}))`,
+    )
+    .join("\n");
   const limitationRows = report.limitations
     .map((limitation) => `- ${inlineCode(limitation.path)} — ${escapeMarkdown(limitation.reason)}`)
     .join("\n");
 
   return `## SunsetPR model lifecycle check
 
-${modelFindings.length === 0 ? "✅ No known deprecated or retired model IDs were found." : `Found **${modelFindings.length}** model reference(s): **${report.summary.retired} retired**, **${report.summary.deprecated} deprecated**. **${report.summary.safeAutoFixes}** meet both the high-confidence code-context and official-replacement gates.`}
+### Decision
 
-| Status | Provider | Model | Official replacement | Shutdown | Detection confidence | Replacement confidence | Evidence | Location |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-${rows || "| ✅ clear | — | — | — | — | — | — | — | — |"}
+- ${decisionIcon} **${decision.label}** (${decision.status})
+- Nearest shutdown: **${deadline}**
+- Next action: ${escapeMarkdown(decision.nextAction)}
+
+${modelFindings.length === 0 ? "✅ No known deprecated or retired model IDs were found." : `Found **${modelFindings.length}** model reference(s): **${report.summary.retired} retired**, **${report.summary.deprecated} deprecated**. **${report.summary.safeAutoFixes}** have a high-confidence official replacement.`}
+
+| Status | Provider | Model | Official replacement | Shutdown | Replacement confidence | Evidence | Location |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+${rows || "| ✅ clear | — | — | — | — | — | — | — |"}
 ${apiRows ? `\n### Deprecated API surfaces\n\nSunsetPR reports these surfaces without applying an unsafe semantic rewrite.\n\n${apiRows}\n` : ""}
+${migrationRiskRows ? `\n### Deterministic migration risks\n\nThese rules come directly from provider migration documentation; no model inference is used.\n\n${migrationRiskRows}\n` : ""}
 ${runtimeRows ? `\n### Runtime confirmation required\n\nStatic analysis could not resolve these values. SunsetPR does **not** classify them as unaffected.\n\n${runtimeRows}\n` : ""}
 ${limitationRows ? `\n### Scan limitations\n\n${limitationRows}\n` : ""}
 ### Scope and data handling
@@ -124,28 +158,33 @@ ${limitationRows ? `\n### Scan limitations\n\n${limitationRows}\n` : ""}
 - Scanned ${report.filesScanned} TypeScript, JavaScript, Python, and supported config file(s) locally on this runner.
 - Model values that are dynamic or environment-backed remain explicitly unconfirmed.
 - No repository code or environment values are sent to SunsetPR or to an external AI model.
-- SunsetPR Action **v${report.toolVersion}**; lifecycle database checked **${report.databaseCheckedAt}** against provider documentation.
-${modelFindings.length > 0 ? `\n[Request an evidence-backed draft repair PR](${REPAIR_BETA_URL}) — early access; no automatic merge.\n` : ""}
+- SunsetPR Action **v${TOOL_VERSION}**; lifecycle database checked **${report.databaseCheckedAt}** against provider documentation.
+${modelFindings.length > 0 ? `\n[Request a CI-verified draft repair PR](${REPAIR_BETA_URL}) — early access; no automatic merge.\n` : ""}
 `;
 }
 
 export async function main(): Promise<void> {
   const root = path.resolve(process.env.INPUT_PATH ?? ".");
   const reportPath = resolveReportPath(process.env.INPUT_REPORT ?? ".sunsetpr/report.json");
-  const failOn = process.env["INPUT_FAIL-ON"] ?? "never";
+  const summaryPath = resolveReportPath(process.env.INPUT_SUMMARY ?? ".sunsetpr/summary.md");
+  const failOn = process.env["INPUT_FAIL-ON"] ?? DEFAULT_FAIL_ON;
   if (!FAIL_THRESHOLDS.has(failOn)) {
     throw new Error(`Invalid fail-on value "${failOn}"; expected never, deprecated, or retired`);
   }
   const database = await loadDatabase();
   const report = await scanRepository(root, database);
+  const summary = renderActionSummary(report);
+  const decision = summarizeScanDecision(report);
   await mkdir(path.dirname(reportPath), { recursive: true });
+  await mkdir(path.dirname(summaryPath), { recursive: true });
   await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
+  await writeFile(summaryPath, summary, "utf8");
 
   await appendIfConfigured(
     "GITHUB_OUTPUT",
-    `findings=${report.summary.modelReferences}\napi-deprecations=${report.summary.apiDeprecations}\nruntime-checks=${report.summary.runtimeChecks}\nretired=${report.summary.retired}\ndeprecated=${report.summary.deprecated}\nsafe-auto-fixes=${report.summary.safeAutoFixes}\nreport=${reportPath}\n`,
+    `findings=${report.summary.modelReferences}\napi-deprecations=${report.summary.apiDeprecations}\nruntime-checks=${report.summary.runtimeChecks}\nmigration-risks=${report.summary.migrationRisks}\nretired=${report.summary.retired}\ndeprecated=${report.summary.deprecated}\nsafe-auto-fixes=${report.summary.safeAutoFixes}\ndecision=${decision.status}\nnearest-shutdown=${decision.nearestShutdownDate ?? ""}\nreport=${reportPath}\nsummary=${summaryPath}\n`,
   );
-  await appendIfConfigured("GITHUB_STEP_SUMMARY", renderActionSummary(report));
+  await appendIfConfigured("GITHUB_STEP_SUMMARY", summary);
   for (const finding of report.findings) {
     process.stdout.write(`${renderAnnotation(finding)}\n`);
   }

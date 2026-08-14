@@ -36,11 +36,30 @@ test("accepts an official source and a currently supported replacement", async (
   assert.equal(database.entries.length, 1);
 });
 
+test("loads all current report-only API surfaces", async () => {
+  const database = await loadDatabase();
+  assert.deepEqual(
+    database.apiDeprecations.map((entry) => entry.apiId),
+    ["assistants-api", "videos-api", "reusable-prompts-api", "evals-api"],
+  );
+});
+
 test("rejects a third-party lifecycle source", async () => {
   const databasePath = await writeDatabase([
     entry({ sourceUrl: "https://example.com/copied-deprecations" }),
   ]);
   await assert.rejects(loadDatabase(databasePath), /official openai source/);
+});
+
+test("accepts a deprecated model before its shutdown date is announced", async () => {
+  const databasePath = await writeDatabase([entry({ shutdownDate: null })]);
+  const database = await loadDatabase(databasePath);
+  assert.equal(database.entries[0]?.shutdownDate, null);
+});
+
+test("rejects a retired model without a shutdown date", async () => {
+  const databasePath = await writeDatabase([entry({ status: "retired", shutdownDate: null })]);
+  await assert.rejects(loadDatabase(databasePath), /cannot be retired without a shutdown date/);
 });
 
 test("rejects a high-confidence replacement that is itself deprecated", async () => {

@@ -10,6 +10,8 @@ const googleSiteVerification = "g3p4aBhy-QisDBolUrs_oDS-nZnFvnbovM47ibKSaK8";
 const privateBetaUrl =
   "mailto:katsumi@synergia-hub.com?subject=SunsetPR%20Repair%20beta%20request&body=Please%20do%20not%20include%20source%20code%2C%20secrets%2C%20or%20environment%20values.%0A%0AProviders%3A%0ALanguages%3A%0ARepository%20count%3A%0APublic%20or%20private%3A";
 const database = JSON.parse(await readFile("data/lifecycle.json", "utf8"));
+const benchmarkCasesPerLabel = database.entries.length * 2 + 20;
+const benchmarkCasesTotal = benchmarkCasesPerLabel * 2;
 const providerLabels = {
   openai: "OpenAI",
   anthropic: "Anthropic",
@@ -116,7 +118,7 @@ const home = shell({
     <p class="disclaimer">Provider documentation is the source of truth. The public Action sends no repository code to SunsetPR or an external AI model.</p>
   </div>
   <aside class="proof" aria-label="Public verification">
-    <strong>460 fixtures</strong><p>labeled synthetic cases cover every lifecycle row and run in public CI; not a real-repository performance claim.</p>
+    <strong>${benchmarkCasesTotal} fixtures</strong><p>labeled synthetic cases cover every lifecycle row and run in public CI; not a real-repository performance claim.</p>
     <strong>5 refs · 6 files</strong><p>real GitHub App → Cloud Run → bot-created draft PR; location-scoped migration invariants and repository CI passed.</p>
     <strong>0 auto-merges</strong><p>dynamic values remain runtime confirmation; every repair stays draft for customer review.</p>
   </aside>
@@ -127,7 +129,7 @@ const home = shell({
   <div class="stats">
     <div><strong>${database.entries.length}</strong><span>exact model IDs</span></div>
     <div><strong>${database.apiDeprecations.length}</strong><span>API surfaces</span></div>
-    <div><strong>460</strong><span>labeled model fixtures</span></div>
+    <div><strong>${benchmarkCasesTotal}</strong><span>labeled model fixtures</span></div>
     <div><strong>56</strong><span>fixed public API call sites</span></div>
   </div>
   <a class="button primary" href="models/">Open the lifecycle database</a>
@@ -140,17 +142,21 @@ const catalogEntries = [...database.entries].sort((left, right) => {
     return left.status === "deprecated" ? -1 : 1;
   }
   return left.status === "deprecated"
-    ? left.shutdownDate.localeCompare(right.shutdownDate)
-    : right.shutdownDate.localeCompare(left.shutdownDate);
+    ? (left.shutdownDate ?? "9999-12-31").localeCompare(
+        right.shutdownDate ?? "9999-12-31",
+      )
+    : (right.shutdownDate ?? "0000-01-01").localeCompare(
+        left.shutdownDate ?? "0000-01-01",
+      );
 });
 const rows = catalogEntries
   .map(
     (entry) => `<a class="row" data-entry="${html(
-      `${entry.modelId} ${entry.provider} ${entry.replacement} ${entry.shutdownDate}`.toLowerCase(),
+      `${entry.modelId} ${entry.provider} ${entry.replacement} ${entry.shutdownDate ?? "not announced"}`.toLowerCase(),
     )}" href="./${encodeURIComponent(entry.modelId)}/">
   <code>${html(entry.modelId)}</code>
   <span class="status ${html(entry.status)}" data-label="Status">${html(entry.status)}</span>
-  <span data-label="Shutdown">${html(entry.shutdownDate)}</span>
+  <span data-label="Shutdown">${html(entry.shutdownDate ?? "Not announced")}</span>
   <code data-label="Replacement">${html(entry.replacement)}</code>
 </a>`,
   )
@@ -211,8 +217,11 @@ await writeFile(path.join(outputRoot, "apis/index.html"), apiCatalog, "utf8");
 for (const entry of database.entries) {
   const relativePath = modelPath(entry.modelId);
   const canonical = `${baseUrl}/${relativePath}`;
-  const title = `${entry.modelId} shutdown date: ${entry.shutdownDate} — SunsetPR`;
-  const description = `${providerLabels[entry.provider]} lists ${entry.modelId} as ${entry.status}; shutdown ${entry.shutdownDate}; official replacement ${entry.replacement}.`;
+  const shutdownLabel = entry.shutdownDate ?? "not announced";
+  const title = `${entry.modelId} shutdown date: ${shutdownLabel} — SunsetPR`;
+  const description = entry.shutdownDate
+    ? `${providerLabels[entry.provider]} lists ${entry.modelId} as ${entry.status}; shutdown ${entry.shutdownDate}; official replacement ${entry.replacement}.`
+    : `${providerLabels[entry.provider]} lists ${entry.modelId} as ${entry.status}; shutdown date not announced; official replacement ${entry.replacement}.`;
   const structuredData = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "TechArticle",
@@ -233,9 +242,9 @@ for (const entry of database.entries) {
   <p class="breadcrumbs"><a href="../../models/">Lifecycle DB</a> / ${html(providerLabels[entry.provider])}</p>
   <p class="tag">${html(entry.status)} · ${html(providerLabels[entry.provider])}</p>
   <h1>${html(entry.modelId)}</h1>
-  <p class="lead">${html(providerLabels[entry.provider])} lists this model ID as ${html(entry.status)} with a shutdown date of <strong>${html(entry.shutdownDate)}</strong>.</p>
+  <p class="lead">${html(providerLabels[entry.provider])} lists this model ID as ${html(entry.status)}${entry.shutdownDate ? ` with a shutdown date of <strong>${html(entry.shutdownDate)}</strong>` : "; the shutdown date is <strong>not announced</strong>"}.</p>
   <dl class="facts">
-    <div><dt>Shutdown date</dt><dd>${html(entry.shutdownDate)}</dd></div>
+    <div><dt>Shutdown date</dt><dd>${html(entry.shutdownDate ?? "Not announced")}</dd></div>
     <div><dt>Status</dt><dd>${html(entry.status)}</dd></div>
     <div><dt>Official replacement</dt><dd><code>${html(entry.replacement)}</code></dd></div>
     <div><dt>Replacement confidence</dt><dd>${html(entry.replacementConfidence)}</dd></div>

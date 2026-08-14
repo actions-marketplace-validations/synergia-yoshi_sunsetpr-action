@@ -48,13 +48,16 @@ function validateEntry(value: unknown, index: number): asserts value is Lifecycl
   if (!CONFIDENCES.has(String(entry.replacementConfidence))) {
     throw new Error(`Lifecycle entry ${index} has an invalid replacement confidence`);
   }
-  for (const key of ["modelId", "shutdownDate", "replacement", "sourceUrl", "notes"]) {
+  for (const key of ["modelId", "replacement", "sourceUrl", "notes"]) {
     if (typeof entry[key] !== "string" || entry[key].length === 0) {
       throw new Error(`Lifecycle entry ${index} is missing ${key}`);
     }
   }
-  if (!isIsoDate(String(entry.shutdownDate))) {
+  if (entry.shutdownDate !== null && !isIsoDate(String(entry.shutdownDate))) {
     throw new Error(`Lifecycle entry ${index} has an invalid shutdown date`);
+  }
+  if (entry.status === "retired" && entry.shutdownDate === null) {
+    throw new Error(`Lifecycle entry ${index} cannot be retired without a shutdown date`);
   }
   const source = new URL(String(entry.sourceUrl));
   if (source.protocol !== "https:") {
@@ -77,10 +80,16 @@ function validateApiEntry(value: unknown, index: number): asserts value is ApiLi
   const entry = value as Record<string, unknown>;
   if (
     entry.provider !== "openai" ||
-    !["assistants-api", "videos-api"].includes(String(entry.apiId)) ||
-    !["Assistants API", "Videos API"].includes(String(entry.apiName)) ||
+    !["assistants-api", "videos-api", "reusable-prompts-api", "evals-api"].includes(
+      String(entry.apiId),
+    ) ||
+    !["Assistants API", "Videos API", "Reusable prompts API", "Evals API"].includes(
+      String(entry.apiName),
+    ) ||
     entry.status !== "deprecated" ||
-    !["OpenAI Assistants", "OpenAI Videos"].includes(String(entry.sdk))
+    !["OpenAI Assistants", "OpenAI Videos", "OpenAI Prompts", "OpenAI Evals"].includes(
+      String(entry.sdk),
+    )
   ) {
     throw new Error(`API lifecycle entry ${index} has unsupported metadata`);
   }

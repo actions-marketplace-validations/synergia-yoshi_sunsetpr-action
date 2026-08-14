@@ -42,7 +42,7 @@ jobs:
           fail-on: never
 ```
 
-The first run adds line annotations and a structured table to the GitHub Actions Job Summary. A machine-readable report is written to `.sunsetpr/report.json`.
+The first run adds line annotations and a structured table to the GitHub Actions Job Summary. A machine-readable report is written to `.sunsetpr/report.json`, and a shareable migration decision is written to `.sunsetpr/summary.md`.
 
 ## What it detects
 
@@ -53,20 +53,22 @@ The first run adds line annotations and a structured table to the GitHub Actions
 - `.env`, JSON, YAML, TOML, INI, and CFG model settings
 - OpenAI Assistants API calls before the 2026-08-26 shutdown
 - OpenAI Videos API calls before the 2026-09-24 shutdown, with no replacement invented
+- OpenAI reusable prompt objects and Evals API calls before the 2026-11-30 shutdown
+- Anthropic sampling parameters that an official successor rejects
 - legacy Gemini Python `GenerativeModel("…")` call shapes
 - OpenAI, Anthropic, and Google Gemini entries verified against official provider documentation
 - unresolved SDK arguments that require runtime confirmation
 
-The bundled database currently contains 105 exact model IDs and aliases plus 2 API surfaces,
-checked on 2026-07-19. Provider documentation is the only source of truth.
+The bundled database currently contains 111 exact model IDs and aliases plus 4 API surfaces,
+checked on 2026-08-07. Provider documentation is the only source of truth.
 
 [Browse model shutdown dates](MODEL-LIFECYCLE.md), inspect the
 [API deprecation evaluation](API-DEPRECATION-EVALUATION.md), or consume the canonical
 [`data/lifecycle.json`](data/lifecycle.json).
 
 The same official-source data also powers
-[105 model shutdown pages](https://synergia-yoshi.github.io/sunsetpr-action/models/) and
-[2 API shutdown pages](https://synergia-yoshi.github.io/sunsetpr-action/apis/) on GitHub Pages.
+[111 model shutdown pages](https://synergia-yoshi.github.io/sunsetpr-action/models/) and
+[4 API shutdown pages](https://synergia-yoshi.github.io/sunsetpr-action/apis/) on GitHub Pages.
 The pages are generated and count-checked in public CI; they do not add tracking or another source.
 
 The maintainer workflow fetches only the three configured provider-owned pages each week. It verifies that every current ID, shutdown date, and replacement remains represented and compares semantic model/date fingerprints. Drift opens one refreshable GitHub issue; it never rewrites lifecycle data without an official-source review.
@@ -78,6 +80,7 @@ The maintainer workflow fetches only the three configured provider-owned pages e
 | `path` | `.` | Repository directory to scan |
 | `fail-on` | `never` | `never` annotates without failing; opt into `deprecated` or `retired` after the first scan |
 | `report` | `.sunsetpr/report.json` | JSON report output path |
+| `summary` | `.sunsetpr/summary.md` | Shareable Markdown decision report |
 
 ## Outputs
 
@@ -86,10 +89,14 @@ The maintainer workflow fetches only the three configured provider-owned pages e
 | `findings` | Deprecated or retired model references |
 | `api-deprecations` | Deprecated API call sites |
 | `runtime-checks` | Dynamic values that static analysis could not resolve |
+| `migration-risks` | Officially documented provider migration risks |
 | `retired` | References to models already shut down |
 | `deprecated` | References to models with an announced shutdown |
 | `safe-auto-fixes` | Findings with both high-confidence code context and official replacement |
+| `decision` | `clear`, `repair_ready`, `review_required`, or `urgent` |
+| `nearest-shutdown` | Nearest affected shutdown date, when present |
 | `report` | Absolute path to the JSON report |
+| `summary` | Absolute path to the Markdown decision report |
 
 ## Security and privacy
 
@@ -110,7 +117,7 @@ Static analysis cannot prove the deployed value of an environment variable, a da
 
 An official replacement can still differ in behavior, quality, latency, price, token limits, or supported parameters. The free Action does not edit code. Detection confidence is separate from replacement confidence; both must be high before the repair product considers a finding eligible for a deterministic edit. Preview or ambiguous successors are not considered safe automatic fixes.
 
-The repository includes 230 labeled positive and 230 labeled negative synthetic cases and currently measures 100% recall and 0% false-positive rate. It is a reproducible regression suite, not a claim about all real repositories.
+The repository includes 242 labeled positive and 242 labeled negative synthetic cases and currently measures 100% recall and 0% false-positive rate. It is a reproducible regression suite, not a claim about all real repositories.
 
 ```bash
 npm ci
@@ -149,7 +156,7 @@ The `v0` release is packaged and tested for GitHub-hosted `ubuntu-latest` runner
 
 ## Versioning
 
-The installation snippet pins the reviewed `v0.2.0` Linux runtime by full commit SHA. Review release
+The installation snippet pins the current reviewed `v0.2.0` Linux runtime by full commit SHA. The `v0.3.0` source remains a release candidate until Linux packaging and self-tests pass. Review release
 notes and public CI before updating both the SHA and its version comment. The immutable `@v0.2.0`
 tag is available for readability; use floating `@v0` only when automatic compatible-beta updates are
 an intentional tradeoff.

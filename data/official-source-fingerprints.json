@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-18T17:22:43.799Z",
+  "generatedAt": "2026-08-07T01:09:42.936Z",
   "providers": {
     "openai": {
       "sourceUrl": "https://developers.openai.com/api/docs/deprecations",
-      "digest": "f61c530676d08454e8b16f6a3e74eb76e913e455a3b82f043f8e9e6d374fbcfc",
+      "digest": "6612eef77e1a965b64dd825656f233dba204426a82bea6a4f056c643f9bc397d",
       "modelTokens": [
         "babbage-001",
         "babbage-002",
@@ -80,14 +80,18 @@
         "gpt-45-preview",
         "gpt-4o",
         "gpt-4o-2024-05-13",
+        "gpt-4o-audio",
         "gpt-4o-audio-preview",
         "gpt-4o-audio-preview-2024-10-01",
         "gpt-4o-mini",
+        "gpt-4o-mini-audio",
         "gpt-4o-mini-audio-preview",
+        "gpt-4o-mini-realtime",
         "gpt-4o-mini-realtime-preview",
         "gpt-4o-mini-search-preview-2025-03-11",
-        "gpt-4o-mini-tts-2025-03-20",
-        "gpt-4o-mini-tts-2025-12-15",
+        "gpt-4o-mini-transcribe-2025-03-20",
+        "gpt-4o-mini-transcribe-2025-12-15",
+        "gpt-4o-realtime",
         "gpt-4o-realtime-preview",
         "gpt-4o-realtime-preview-2024-10-01",
         "gpt-4o-realtime-preview-2024-12-17",
@@ -101,7 +105,6 @@
         "gpt-5-chat-latest",
         "gpt-5-codex",
         "gpt-5-codex-mini",
-        "gpt-5-mini",
         "gpt-5-mini-2025-08-07",
         "gpt-5-nano-2025-08-07",
         "gpt-5-pro-2025-10-06",
@@ -114,13 +117,13 @@
         "gpt-5.3-chat-latest",
         "gpt-5.3-codex",
         "gpt-5.4",
-        "gpt-5.4-mini",
-        "gpt-5.4-nano",
-        "gpt-5.5",
-        "gpt-5.5-pro",
         "gpt-5.6",
+        "gpt-5.6-luna",
+        "gpt-5.6-sol",
+        "gpt-5.6-terra",
         "gpt-52-chat-latest-and-gpt-53-chat-latest-model-snapshots",
         "gpt-and-embeddings",
+        "gpt-audio",
         "gpt-audio-1.5",
         "gpt-audio-mini",
         "gpt-audio-mini-2025-10-06",
@@ -130,9 +133,14 @@
         "gpt-image-2",
         "gpt-image-model-deprecations",
         "gpt-model-snapshots",
+        "gpt-model-snapshots-july-2026-shutdown",
+        "gpt-model-snapshots-march-2026-shutdown",
         "gpt-models",
         "gpt-oss",
+        "gpt-realtime",
         "gpt-realtime-1.5",
+        "gpt-realtime-2.1",
+        "gpt-realtime-2.1-mini",
         "gpt-realtime-mini",
         "gpt-realtime-mini-2025-10-06",
         "o1-2024-12-17",
@@ -209,6 +217,7 @@
         "2026-02-12",
         "2026-02-17",
         "2026-03-24",
+        "2026-03-26",
         "2026-04-22",
         "2026-05-07",
         "2026-05-08",
@@ -217,6 +226,7 @@
         "2026-06-03",
         "2026-06-11",
         "2026-07-02",
+        "2026-07-20",
         "2026-07-23",
         "2026-08-10",
         "2026-08-26",
@@ -227,12 +237,13 @@
         "2026-11-30",
         "2026-12-01",
         "2026-12-11",
-        "2027-01-06"
+        "2027-01-06",
+        "2027-01-20"
       ]
     },
     "anthropic": {
       "sourceUrl": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
-      "digest": "474fd6936ece82a8a31f28402e08194c50befa010172b8f3381cd538ce7d41c9",
+      "digest": "79115fb7e6071a4aeef15e2c2c464812fe52f3b1987a1522c3c0b6990f234329",
       "modelTokens": [
         "claude-1-and-instant-models",
         "claude-1.0",
@@ -249,7 +260,6 @@
         "claude-3-haiku-20240307",
         "claude-3-opus-20240229",
         "claude-3-sonnet-20240229",
-        "claude-4-8",
         "claude-api-skill",
         "claude-code",
         "claude-code-analytics-api",
@@ -276,6 +286,7 @@
         "claude-opus-4-6",
         "claude-opus-4-7",
         "claude-opus-4-8",
+        "claude-opus-5",
         "claude-platform-on-aws",
         "claude-platform-on-aws-iam-actions",
         "claude-prompting-best-practices",
@@ -304,7 +315,6 @@
         "2026-06-04",
         "2026-06-05",
         "2026-06-15",
-        "2026-07-21",
         "2026-08-05",
         "2026-09-29",
         "2026-10-15",
@@ -314,12 +324,13 @@
         "2027-04-16",
         "2027-05-28",
         "2027-06-09",
-        "2027-06-30"
+        "2027-06-30",
+        "2027-07-24"
       ]
     },
     "gemini": {
       "sourceUrl": "https://ai.google.dev/gemini-api/docs/deprecations",
-      "digest": "75b3ab0eef3d3286de3cf51c96c05f9e45333721faed93008fb9f363fb9f6e36",
+      "digest": "33747c0430aeac0951ca7ce7eb523e8f4d17c840dcfdf82cd98760078c5be9a1",
       "modelTokens": [
         "gemini-2.0-flash",
         "gemini-2.0-flash-001",
@@ -363,7 +374,9 @@
         "gemini-3.1-pro-preview",
         "gemini-3.5",
         "gemini-3.5-flash",
+        "gemini-3.5-flash-lite",
         "gemini-3.5-live-translate-preview",
+        "gemini-3.6-flash",
         "gemini-api",
         "gemini-api-2026-07.png",
         "gemini-api-hovercard",
@@ -380,7 +393,9 @@
         "gemini-live-2.5-flash-preview",
         "gemini-omni-flash",
         "gemini-robotics-er-1.5-preview",
-        "gemini-robotics-er-1.6-preview"
+        "gemini-robotics-er-1.6-preview",
+        "gemini-robotics-er-2-preview",
+        "gemini-robotics-er-2-streaming-preview"
       ],
       "dates": [
         "2024-04-09",
@@ -434,13 +449,14 @@
         "2026-06-01",
         "2026-06-25",
         "2026-06-30",
-        "2026-07-02",
-        "2026-07-14",
+        "2026-07-21",
+        "2026-08-03",
         "2026-08-10",
         "2026-08-17",
+        "2026-08-31",
         "2026-10-02",
-        "2026-10-16",
-        "2027-05-07"
+        "2027-05-07",
+        "2028-05-14"
       ]
     }
   }

@@ -3,11 +3,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { Lang, parse, registerDynamicLanguage, type SgNode } from "@ast-grep/napi";
 import type {
-  ApiDeprecationFinding,
   ApiLifecycleEntry,
   Finding,
   LifecycleEntry,
   Location,
+  MigrationRiskFinding,
   ModelFinding,
   Provider,
   RuntimeCheckFinding,
@@ -60,6 +60,15 @@ interface SdkCall {
   provider: Provider;
   name: string;
 }
+
+const ANTHROPIC_PARAMETER_SOURCE =
+  "https://platform.claude.com/docs/en/about-claude/model-deprecations";
+const ANTHROPIC_TARGETS_WITHOUT_SAMPLING_PARAMETERS = new Set([
+  "claude-opus-4-7",
+  "claude-opus-4-8",
+  "claude-sonnet-5",
+]);
+const ANTHROPIC_UNSUPPORTED_SAMPLING_PARAMETERS = new Set(["temperature", "top_p", "top_k"]);
 
 function walk(node: SgNode, callback: (node: SgNode) => void): void {
   callback(node);
@@ -348,6 +357,106 @@ function runtimeSourceKind(text: string): "environment" | "dynamic" {
     : "dynamic";
 }
 
+function literalModelEntry(
+  argument: SgNode,
+  entries: Map<string, LifecycleEntry>,
+): LifecycleEntry | null {
+  let result: LifecycleEntry | null = null;
+  walk(argument, (node) => {
+    if (result) {
+      return;
+    }
+    const value = stringValue(node);
+    const entry = value ? entries.get(value) : undefined;
+    if (entry) {
+      result = entry;
+    }
+  });
+  return result;
+}
+
+function parameterNameAndValue(
+  node: SgNode,
+): { name: "temperature" | "top_p" | "top_k"; value: string } | null {
+  if (!["pair", "keyword_argument"].includes(String(node.kind()))) {
+    return null;
+  }
+  const match = node.text().match(/^\s*(temperature|top_p|top_k)\s*[:=]\s*([\s\S]+?)\s*$/);
+  if (!match || !ANTHROPIC_UNSUPPORTED_SAMPLING_PARAMETERS.has(match[1] ?? "")) {
+    return null;
+  }
+  return {
+    name: match[1] as "temperature" | "top_p" | "top_k",
+    value: match[2] ?? "",
+  };
+}
+
+function isDirectRequestParameter(candidate: SgNode, call: SgNode): boolean {
+  const ancestors = candidate.ancestors();
+  const nearestCall = ancestors.find((ancestor) =>
+    ["call", "call_expression"].includes(String(ancestor.kind())),
+  );
+  if (!nearestCall || nearestCall.range().start.index !== call.range().start.index) {
+    return false;
+  }
+  if (candidate.kind() === "keyword_argument") {
+    return true;
+  }
+  const objectsBeforeCall = ancestors
+    .slice(0, ancestors.indexOf(nearestCall))
+    .filter((ancestor) => ancestor.kind() === "object");
+  return objectsBeforeCall.length === 1;
+}
+
+function isStaticNumericValue(value: string): boolean {
+  return /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(value.replaceAll("_", ""));
+}
+
+function propertyDeletionRange(
+  content: string,
+  start: number,
+  end: number,
+): { start: number; end: number; oldText: string } {
+  const bytes = Buffer.from(content, "utf8");
+  let expandedStart = start;
+  let expandedEnd = end;
+  while (expandedEnd < bytes.length && [9, 32].includes(bytes[expandedEnd] ?? -1)) {
+    expandedEnd += 1;
+  }
+  if (bytes[expandedEnd] === 44) {
+    expandedEnd += 1;
+    while (expandedEnd < bytes.length && [9, 32].includes(bytes[expandedEnd] ?? -1)) {
+      expandedEnd += 1;
+    }
+  } else {
+    let cursor = expandedStart - 1;
+    while (cursor >= 0 && [9, 32].includes(bytes[cursor] ?? -1)) {
+      cursor -= 1;
+    }
+    if (bytes[cursor] === 44) {
+      expandedStart = cursor;
+    }
+  }
+  const precedingNewline = bytes.lastIndexOf(10, start - 1);
+  const lineStart = precedingNewline + 1;
+  const leadingText = bytes.subarray(lineStart, start).toString("utf8");
+  if (/^[\t ]*$/.test(leadingText)) {
+    let newlineEnd = expandedEnd;
+    if (bytes[newlineEnd] === 13) {
+      newlineEnd += 1;
+    }
+    if (bytes[newlineEnd] === 10) {
+      expandedStart = lineStart;
+      expandedEnd = newlineEnd + 1;
+    }
+  }
+  return {
+    start: expandedStart,
+    end: expandedEnd,
+    oldText: bytes.subarray(expandedStart, expandedEnd).toString("utf8"),
+  };
+}
+
 export function analyzeCode(
   relativePath: string,
   content: string,
@@ -368,6 +477,39 @@ export function analyzeCode(
   const apiEntriesById = new Map(apiEntries.map((entry) => [entry.apiId, entry]));
   const findings: Finding[] = [];
   const seen = new Set<string>();
+
+  const addApiFinding = (node: SgNode, entry: ApiLifecycleEntry): void => {
+    const range = node.range();
+    const location = toLocation(
+      relativePath,
+      range.start.line,
+      range.start.column,
+      range.start.index,
+      range.end.index,
+    );
+    const id = findingId("api", location, `openai-${entry.apiId}`);
+    if (seen.has(id)) {
+      return;
+    }
+    seen.add(id);
+    const migration = entry.replacement
+      ? `migrate to ${entry.replacement}`
+      : "the official deprecations page lists no replacement";
+    findings.push({
+      id,
+      kind: "api_deprecation",
+      provider: "openai",
+      apiId: entry.apiId,
+      status: entry.status,
+      shutdownDate: entry.shutdownDate,
+      replacement: entry.replacement,
+      sourceUrl: entry.sourceUrl,
+      confidence: "high",
+      sdk: entry.sdk,
+      location,
+      message: `${entry.apiName} is deprecated and shuts down on ${entry.shutdownDate}; ${migration}.`,
+    });
+  };
 
   walk(root, (node) => {
     const value = stringValue(node);
@@ -422,34 +564,7 @@ export function analyzeCode(
     ) {
       return;
     }
-    const range = node.range();
-    const location = toLocation(
-      relativePath,
-      range.start.line,
-      range.start.column,
-      range.start.index,
-      range.end.index,
-    );
-    const id = findingId("api", location, "openai-assistants-api");
-    if (seen.has(id)) {
-      return;
-    }
-    seen.add(id);
-    const finding: ApiDeprecationFinding = {
-      id,
-      kind: "api_deprecation",
-      provider: "openai",
-      apiId: "assistants-api",
-      status: entry.status,
-      shutdownDate: entry.shutdownDate,
-      replacement: entry.replacement,
-      sourceUrl: entry.sourceUrl,
-      confidence: "high",
-      sdk: entry.sdk,
-      location,
-      message: `${entry.apiName} is deprecated and shuts down on ${entry.shutdownDate}; migrate to ${entry.replacement}.`,
-    };
-    findings.push(finding);
+    addApiFinding(node, entry);
   });
 
   walk(root, (node) => {
@@ -464,34 +579,97 @@ export function analyzeCode(
     ) {
       return;
     }
-    const range = node.range();
-    const location = toLocation(
-      relativePath,
-      range.start.line,
-      range.start.column,
-      range.start.index,
-      range.end.index,
-    );
-    const id = findingId("api", location, "openai-videos-api");
-    if (seen.has(id)) {
+    addApiFinding(node, entry);
+  });
+
+  walk(root, (node) => {
+    const entry = apiEntriesById.get("reusable-prompts-api");
+    if (!entry || !["call", "call_expression"].includes(String(node.kind()))) {
       return;
     }
-    seen.add(id);
-    const finding: ApiDeprecationFinding = {
-      id,
-      kind: "api_deprecation",
-      provider: "openai",
-      apiId: "videos-api",
-      status: entry.status,
-      shutdownDate: entry.shutdownDate,
-      replacement: entry.replacement,
-      sourceUrl: entry.sourceUrl,
-      confidence: "high",
-      sdk: entry.sdk,
-      location,
-      message: `${entry.apiName} is deprecated and shuts down on ${entry.shutdownDate}; the official deprecations page lists no replacement.`,
-    };
-    findings.push(finding);
+    const text = node.text();
+    const promptEndpoint = /\.prompts\.(?:create|retrieve|list|update|delete)\s*\(/.test(text);
+    const reusablePromptObject =
+      /\.responses\.create\s*\(/.test(text) &&
+      (/(?:\bprompt\s*:|\bprompt\s*=)\s*\{[\s\S]*?\bid\s*[:=]/.test(text) ||
+        /\bprompt\s*=\s*\{[\s\S]*?["']id["']\s*:/.test(text));
+    if ((!promptEndpoint && !reusablePromptObject) || !providerEvidence(content, "openai")) {
+      return;
+    }
+    addApiFinding(node, entry);
+  });
+
+  walk(root, (node) => {
+    const entry = apiEntriesById.get("evals-api");
+    if (
+      !entry ||
+      !["call", "call_expression"].includes(String(node.kind())) ||
+      !/\.evals(?:\.runs)?\.(?:create|retrieve|list|update|delete|cancel)\s*\(/.test(node.text()) ||
+      !providerEvidence(content, "openai")
+    ) {
+      return;
+    }
+    addApiFinding(node, entry);
+  });
+
+  walk(root, (node) => {
+    if (!["call", "call_expression"].includes(String(node.kind()))) {
+      return;
+    }
+    const sdk = detectSdkCall(node.text(), content);
+    if (sdk?.provider !== "anthropic") {
+      return;
+    }
+    const argument = modelArgument(node);
+    const entry = argument ? literalModelEntry(argument, entries) : null;
+    if (
+      entry?.provider !== "anthropic" ||
+      !ANTHROPIC_TARGETS_WITHOUT_SAMPLING_PARAMETERS.has(entry.replacement)
+    ) {
+      return;
+    }
+    walk(node, (candidate) => {
+      const parameter = parameterNameAndValue(candidate);
+      if (!parameter || !isDirectRequestParameter(candidate, node)) {
+        return;
+      }
+      const range = candidate.range();
+      const deletion = propertyDeletionRange(content, range.start.index, range.end.index);
+      const autoFix = isStaticNumericValue(parameter.value);
+      const location = toLocation(
+        relativePath,
+        range.start.line,
+        range.start.column,
+        deletion.start,
+        deletion.end,
+      );
+      const id = findingId(
+        "migration-risk",
+        location,
+        `anthropic-unsupported-sampling-parameter:${parameter.name}`,
+      );
+      if (seen.has(id)) {
+        return;
+      }
+      seen.add(id);
+      const finding: MigrationRiskFinding = {
+        id,
+        kind: "migration_risk",
+        provider: "anthropic",
+        ruleId: "anthropic-unsupported-sampling-parameter",
+        parameter: parameter.name,
+        targetModel: entry.replacement,
+        confidence: autoFix ? "high" : "medium",
+        autoFix,
+        oldText: deletion.oldText,
+        sourceUrl: ANTHROPIC_PARAMETER_SOURCE,
+        location,
+        message: autoFix
+          ? `${parameter.name} is removed because explicit sampling values are rejected by ${entry.replacement}.`
+          : `${parameter.name} may be rejected by ${entry.replacement}; its dynamic value requires review.`,
+      };
+      findings.push(finding);
+    });
   });
 
   walk(root, (node) => {

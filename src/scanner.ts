@@ -70,6 +70,7 @@ export async function scanRepository(
   const modelFindings = findings.filter((finding) => finding.kind === "model_reference");
   const apiDeprecations = findings.filter((finding) => finding.kind === "api_deprecation");
   const runtimeChecks = findings.filter((finding) => finding.kind === "runtime_check");
+  const migrationRisks = findings.filter((finding) => finding.kind === "migration_risk");
   return {
     schemaVersion: 1,
     toolVersion: TOOL_VERSION,
@@ -85,6 +86,7 @@ export async function scanRepository(
       modelReferences: modelFindings.length,
       apiDeprecations: apiDeprecations.length,
       runtimeChecks: runtimeChecks.length,
+      migrationRisks: migrationRisks.length,
       deprecated: modelFindings.filter((finding) => finding.status === "deprecated").length,
       retired: modelFindings.filter((finding) => finding.status === "retired").length,
       safeAutoFixes: modelFindings.filter(
