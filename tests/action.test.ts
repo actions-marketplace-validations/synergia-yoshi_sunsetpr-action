@@ -168,7 +168,7 @@ await xai.chat.completions.create({ model: "grok-4-0709", messages: [] });`,
     entries,
   );
 
-  assert.equal(cohere.find((finding) => finding.kind === "model_reference")?.sdk, "Cohere v2");
+  assert.equal(cohere.find((finding) => finding.kind === "model_reference")?.sdk, "Cohere SDK");
   assert.equal(xai.find((finding) => finding.kind === "model_reference")?.sdk, "xAI OpenAI-compatible");
   assert.deepEqual(unrelated, []);
 });
