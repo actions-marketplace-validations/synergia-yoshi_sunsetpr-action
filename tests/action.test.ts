@@ -262,6 +262,7 @@ await client.evals.create({ name: "quality" });`,
   const evals = apiFindings.find((finding) => finding.apiId === "evals-api");
 
   assert.equal(assistants?.shutdownDate, "2026-08-26");
+  assert.equal(assistants?.status, "retired");
   assert.equal(assistants?.replacement, "Responses API and Conversations API");
   assert.equal(videos?.shutdownDate, "2026-09-24");
   assert.equal(videos?.replacement, null);
@@ -294,7 +295,7 @@ await client.evals.create({ name: "quality" });`,
   assert.match(summary, /Responses API and Conversations API/);
   assert.match(summary, /no official replacement is listed/);
   assert.match(summary, /Promptfoo/);
-  assert.match(summary, /Human review required/);
+  assert.match(summary, /Immediate action required/);
 });
 
 test("does not classify unrelated prompt or eval clients as OpenAI APIs", async () => {

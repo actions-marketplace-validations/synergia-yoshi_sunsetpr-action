@@ -17,7 +17,7 @@ export interface ApiLifecycleEntry {
   provider: "openai";
   apiId: "assistants-api" | "videos-api" | "reusable-prompts-api" | "evals-api";
   apiName: "Assistants API" | "Videos API" | "Reusable prompts API" | "Evals API";
-  status: "deprecated";
+  status: LifecycleStatus;
   shutdownDate: string;
   replacement: string | null;
   sourceUrl: string;
@@ -75,7 +75,7 @@ export interface ApiDeprecationFinding {
   kind: "api_deprecation";
   provider: "openai";
   apiId: "assistants-api" | "videos-api" | "reusable-prompts-api" | "evals-api";
-  status: "deprecated";
+  status: LifecycleStatus;
   shutdownDate: string;
   replacement: string | null;
   sourceUrl: string;

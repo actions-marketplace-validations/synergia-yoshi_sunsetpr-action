@@ -7,7 +7,7 @@
       "provider": "openai",
       "apiId": "assistants-api",
       "apiName": "Assistants API",
-      "status": "deprecated",
+      "status": "retired",
       "shutdownDate": "2026-08-26",
       "replacement": "Responses API and Conversations API",
       "sourceUrl": "https://developers.openai.com/api/docs/deprecations",

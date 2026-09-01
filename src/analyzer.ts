@@ -521,7 +521,7 @@ export function analyzeCode(
       confidence: "high",
       sdk: entry.sdk,
       location,
-      message: `${entry.apiName} is deprecated and shuts down on ${entry.shutdownDate}; ${migration}.`,
+      message: `${entry.apiName} is ${entry.status} with shutdown date ${entry.shutdownDate}; ${migration}.`,
     });
   };
 
