@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@ast-grep/lang-python": "^0.0.6",
-    "@ast-grep/napi": "0.44.1"
+    "@ast-grep/napi": "0.45.2"
   },
   "devDependencies": {
     "@types/node": "26.1.1",
