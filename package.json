@@ -1,6 +1,6 @@
 {
   "name": "sunsetpr-action",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Detect deprecated OpenAI, Anthropic, Gemini, Cohere, and xAI model IDs and API surfaces in GitHub Actions.",
   "type": "module",
   "engines": {
