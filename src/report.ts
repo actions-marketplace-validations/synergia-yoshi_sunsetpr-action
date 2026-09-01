@@ -29,9 +29,7 @@ export function summarizeScanDecision(report: ScanReport): ScanDecision {
     ? Math.ceil((Date.parse(`${nearestShutdownDate}T00:00:00.000Z`) - referenceDate) / DAY_MS)
     : null;
   const isUrgent =
-    lifecycleFindings.some(
-      (finding) => finding.kind === "model_reference" && finding.status === "retired",
-    ) ||
+    lifecycleFindings.some((finding) => finding.status === "retired") ||
     (daysUntilShutdown !== null && daysUntilShutdown <= 0);
   if (isUrgent) {
     return {

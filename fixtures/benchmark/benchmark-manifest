@@ -753,591 +753,641 @@
     {
       "path": "positives/generated.ts",
       "line": 66,
-      "modelId": "claude-mythos-preview"
+      "modelId": "whisper-1"
     },
     {
       "path": "positives/generated.py",
       "line": 66,
+      "modelId": "whisper-1"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 67,
+      "modelId": "gpt-4o-transcribe"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 67,
+      "modelId": "gpt-4o-transcribe"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 68,
+      "modelId": "gpt-4o-mini-transcribe"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 68,
+      "modelId": "gpt-4o-mini-transcribe"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 69,
+      "modelId": "gpt-4o-transcribe-diarize"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 69,
+      "modelId": "gpt-4o-transcribe-diarize"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 70,
+      "modelId": "claude-mythos-preview"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 70,
       "modelId": "claude-mythos-preview"
     },
     {
       "path": "positives/generated.ts",
-      "line": 67,
+      "line": 71,
       "modelId": "claude-opus-4-1-20250805"
     },
     {
       "path": "positives/generated.py",
-      "line": 67,
+      "line": 71,
       "modelId": "claude-opus-4-1-20250805"
     },
     {
       "path": "positives/generated.ts",
-      "line": 68,
+      "line": 72,
       "modelId": "claude-sonnet-4-20250514"
     },
     {
       "path": "positives/generated.py",
-      "line": 68,
+      "line": 72,
       "modelId": "claude-sonnet-4-20250514"
     },
     {
       "path": "positives/generated.ts",
-      "line": 69,
+      "line": 73,
       "modelId": "claude-opus-4-20250514"
     },
     {
       "path": "positives/generated.py",
-      "line": 69,
+      "line": 73,
       "modelId": "claude-opus-4-20250514"
     },
     {
       "path": "positives/generated.ts",
-      "line": 70,
+      "line": 74,
       "modelId": "claude-3-haiku-20240307"
     },
     {
       "path": "positives/generated.py",
-      "line": 70,
+      "line": 74,
       "modelId": "claude-3-haiku-20240307"
     },
     {
       "path": "positives/generated.ts",
-      "line": 71,
+      "line": 75,
       "modelId": "claude-3-5-haiku-20241022"
     },
     {
       "path": "positives/generated.py",
-      "line": 71,
+      "line": 75,
       "modelId": "claude-3-5-haiku-20241022"
     },
     {
       "path": "positives/generated.ts",
-      "line": 72,
+      "line": 76,
       "modelId": "claude-3-7-sonnet-20250219"
     },
     {
       "path": "positives/generated.py",
-      "line": 72,
+      "line": 76,
       "modelId": "claude-3-7-sonnet-20250219"
     },
     {
       "path": "positives/generated.ts",
-      "line": 73,
+      "line": 77,
       "modelId": "claude-3-5-sonnet-20240620"
     },
     {
       "path": "positives/generated.py",
-      "line": 73,
+      "line": 77,
       "modelId": "claude-3-5-sonnet-20240620"
     },
     {
       "path": "positives/generated.ts",
-      "line": 74,
+      "line": 78,
       "modelId": "claude-3-5-sonnet-20241022"
     },
     {
       "path": "positives/generated.py",
-      "line": 74,
+      "line": 78,
       "modelId": "claude-3-5-sonnet-20241022"
     },
     {
       "path": "positives/generated.ts",
-      "line": 75,
+      "line": 79,
       "modelId": "claude-3-opus-20240229"
     },
     {
       "path": "positives/generated.py",
-      "line": 75,
+      "line": 79,
       "modelId": "claude-3-opus-20240229"
     },
     {
       "path": "positives/generated.ts",
-      "line": 76,
+      "line": 80,
       "modelId": "claude-2.0"
     },
     {
       "path": "positives/generated.py",
-      "line": 76,
+      "line": 80,
       "modelId": "claude-2.0"
     },
     {
       "path": "positives/generated.ts",
-      "line": 77,
+      "line": 81,
       "modelId": "claude-2.1"
     },
     {
       "path": "positives/generated.py",
-      "line": 77,
+      "line": 81,
       "modelId": "claude-2.1"
     },
     {
       "path": "positives/generated.ts",
-      "line": 78,
+      "line": 82,
       "modelId": "claude-3-sonnet-20240229"
     },
     {
       "path": "positives/generated.py",
-      "line": 78,
+      "line": 82,
       "modelId": "claude-3-sonnet-20240229"
     },
     {
       "path": "positives/generated.ts",
-      "line": 79,
-      "modelId": "gemini-3.1-flash-lite"
-    },
-    {
-      "path": "positives/generated.py",
-      "line": 79,
-      "modelId": "gemini-3.1-flash-lite"
-    },
-    {
-      "path": "positives/generated.ts",
-      "line": 80,
-      "modelId": "gemini-3.1-flash-image-preview"
-    },
-    {
-      "path": "positives/generated.py",
-      "line": 80,
-      "modelId": "gemini-3.1-flash-image-preview"
-    },
-    {
-      "path": "positives/generated.ts",
-      "line": 81,
-      "modelId": "gemini-3-pro-image-preview"
-    },
-    {
-      "path": "positives/generated.py",
-      "line": 81,
-      "modelId": "gemini-3-pro-image-preview"
-    },
-    {
-      "path": "positives/generated.ts",
-      "line": 82,
-      "modelId": "gemini-3-pro-preview"
-    },
-    {
-      "path": "positives/generated.py",
-      "line": 82,
-      "modelId": "gemini-3-pro-preview"
-    },
-    {
-      "path": "positives/generated.ts",
       "line": 83,
-      "modelId": "gemini-3.1-flash-lite-preview"
+      "modelId": "gemini-omni-flash-preview"
     },
     {
       "path": "positives/generated.py",
       "line": 83,
+      "modelId": "gemini-omni-flash-preview"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 84,
+      "modelId": "gemini-3.1-flash-lite"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 84,
+      "modelId": "gemini-3.1-flash-lite"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 85,
+      "modelId": "gemini-3.1-flash-image-preview"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 85,
+      "modelId": "gemini-3.1-flash-image-preview"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 86,
+      "modelId": "gemini-3-pro-image-preview"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 86,
+      "modelId": "gemini-3-pro-image-preview"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 87,
+      "modelId": "gemini-3-pro-preview"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 87,
+      "modelId": "gemini-3-pro-preview"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 88,
+      "modelId": "gemini-3.1-flash-lite-preview"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 88,
       "modelId": "gemini-3.1-flash-lite-preview"
     },
     {
       "path": "positives/generated.ts",
-      "line": 84,
+      "line": 89,
       "modelId": "gemini-2.5-pro-preview-03-25"
     },
     {
       "path": "positives/generated.py",
-      "line": 84,
+      "line": 89,
       "modelId": "gemini-2.5-pro-preview-03-25"
     },
     {
       "path": "positives/generated.ts",
-      "line": 85,
+      "line": 90,
       "modelId": "gemini-2.5-pro-preview-05-06"
     },
     {
       "path": "positives/generated.py",
-      "line": 85,
+      "line": 90,
       "modelId": "gemini-2.5-pro-preview-05-06"
     },
     {
       "path": "positives/generated.ts",
-      "line": 86,
+      "line": 91,
       "modelId": "gemini-2.5-pro-preview-06-05"
     },
     {
       "path": "positives/generated.py",
-      "line": 86,
+      "line": 91,
       "modelId": "gemini-2.5-pro-preview-06-05"
     },
     {
       "path": "positives/generated.ts",
-      "line": 87,
+      "line": 92,
       "modelId": "gemini-2.5-flash-image"
     },
     {
       "path": "positives/generated.py",
-      "line": 87,
+      "line": 92,
       "modelId": "gemini-2.5-flash-image"
     },
     {
       "path": "positives/generated.ts",
-      "line": 88,
+      "line": 93,
       "modelId": "gemini-2.5-flash-lite-preview-09-2025"
     },
     {
       "path": "positives/generated.py",
-      "line": 88,
+      "line": 93,
       "modelId": "gemini-2.5-flash-lite-preview-09-2025"
     },
     {
       "path": "positives/generated.ts",
-      "line": 89,
+      "line": 94,
       "modelId": "gemini-2.5-flash-preview-05-20"
     },
     {
       "path": "positives/generated.py",
-      "line": 89,
+      "line": 94,
       "modelId": "gemini-2.5-flash-preview-05-20"
     },
     {
       "path": "positives/generated.ts",
-      "line": 90,
+      "line": 95,
       "modelId": "gemini-2.5-flash-image-preview"
     },
     {
       "path": "positives/generated.py",
-      "line": 90,
+      "line": 95,
       "modelId": "gemini-2.5-flash-image-preview"
     },
     {
       "path": "positives/generated.ts",
-      "line": 91,
+      "line": 96,
       "modelId": "gemini-2.5-flash-preview-09-25"
     },
     {
       "path": "positives/generated.py",
-      "line": 91,
+      "line": 96,
       "modelId": "gemini-2.5-flash-preview-09-25"
     },
     {
       "path": "positives/generated.ts",
-      "line": 92,
+      "line": 97,
       "modelId": "gemini-2.0-flash"
     },
     {
       "path": "positives/generated.py",
-      "line": 92,
+      "line": 97,
       "modelId": "gemini-2.0-flash"
     },
     {
       "path": "positives/generated.ts",
-      "line": 93,
+      "line": 98,
       "modelId": "gemini-2.0-flash-001"
     },
     {
       "path": "positives/generated.py",
-      "line": 93,
+      "line": 98,
       "modelId": "gemini-2.0-flash-001"
     },
     {
       "path": "positives/generated.ts",
-      "line": 94,
+      "line": 99,
       "modelId": "gemini-2.0-flash-lite"
     },
     {
       "path": "positives/generated.py",
-      "line": 94,
+      "line": 99,
       "modelId": "gemini-2.0-flash-lite"
     },
     {
       "path": "positives/generated.ts",
-      "line": 95,
+      "line": 100,
       "modelId": "gemini-2.0-flash-lite-001"
     },
     {
       "path": "positives/generated.py",
-      "line": 95,
+      "line": 100,
       "modelId": "gemini-2.0-flash-lite-001"
     },
     {
       "path": "positives/generated.ts",
-      "line": 96,
+      "line": 101,
       "modelId": "gemini-2.0-flash-preview-image-generation"
     },
     {
       "path": "positives/generated.py",
-      "line": 96,
+      "line": 101,
       "modelId": "gemini-2.0-flash-preview-image-generation"
     },
     {
       "path": "positives/generated.ts",
-      "line": 97,
+      "line": 102,
       "modelId": "gemini-2.0-flash-lite-preview"
     },
     {
       "path": "positives/generated.py",
-      "line": 97,
+      "line": 102,
       "modelId": "gemini-2.0-flash-lite-preview"
     },
     {
       "path": "positives/generated.ts",
-      "line": 98,
+      "line": 103,
       "modelId": "gemini-2.0-flash-lite-preview-02-05"
     },
     {
       "path": "positives/generated.py",
-      "line": 98,
+      "line": 103,
       "modelId": "gemini-2.0-flash-lite-preview-02-05"
     },
     {
       "path": "positives/generated.ts",
-      "line": 99,
+      "line": 104,
       "modelId": "gemini-2.0-flash-live-001"
     },
     {
       "path": "positives/generated.py",
-      "line": 99,
+      "line": 104,
       "modelId": "gemini-2.0-flash-live-001"
     },
     {
       "path": "positives/generated.ts",
-      "line": 100,
+      "line": 105,
       "modelId": "gemini-live-2.5-flash-preview"
     },
     {
       "path": "positives/generated.py",
-      "line": 100,
+      "line": 105,
       "modelId": "gemini-live-2.5-flash-preview"
     },
     {
       "path": "positives/generated.ts",
-      "line": 101,
+      "line": 106,
       "modelId": "gemini-embedding-001"
     },
     {
       "path": "positives/generated.py",
-      "line": 101,
+      "line": 106,
       "modelId": "gemini-embedding-001"
     },
     {
       "path": "positives/generated.ts",
-      "line": 102,
+      "line": 107,
       "modelId": "text-embedding-004"
     },
     {
       "path": "positives/generated.py",
-      "line": 102,
+      "line": 107,
       "modelId": "text-embedding-004"
     },
     {
       "path": "positives/generated.ts",
-      "line": 103,
+      "line": 108,
       "modelId": "embedding-2-preview"
     },
     {
       "path": "positives/generated.py",
-      "line": 103,
+      "line": 108,
       "modelId": "embedding-2-preview"
     },
     {
       "path": "positives/generated.ts",
-      "line": 104,
+      "line": 109,
       "modelId": "embedding-001"
     },
     {
       "path": "positives/generated.py",
-      "line": 104,
+      "line": 109,
       "modelId": "embedding-001"
     },
     {
       "path": "positives/generated.ts",
-      "line": 105,
+      "line": 110,
       "modelId": "embedding-gecko-001"
     },
     {
       "path": "positives/generated.py",
-      "line": 105,
+      "line": 110,
       "modelId": "embedding-gecko-001"
     },
     {
       "path": "positives/generated.ts",
-      "line": 106,
+      "line": 111,
       "modelId": "gemini-embedding-exp"
     },
     {
       "path": "positives/generated.py",
-      "line": 106,
+      "line": 111,
       "modelId": "gemini-embedding-exp"
     },
     {
       "path": "positives/generated.ts",
-      "line": 107,
+      "line": 112,
       "modelId": "gemini-embedding-exp-03-07"
     },
     {
       "path": "positives/generated.py",
-      "line": 107,
+      "line": 112,
       "modelId": "gemini-embedding-exp-03-07"
     },
     {
       "path": "positives/generated.ts",
-      "line": 108,
+      "line": 113,
       "modelId": "imagen-4.0-generate-001"
     },
     {
       "path": "positives/generated.py",
-      "line": 108,
+      "line": 113,
       "modelId": "imagen-4.0-generate-001"
     },
     {
       "path": "positives/generated.ts",
-      "line": 109,
+      "line": 114,
       "modelId": "imagen-4.0-ultra-generate-001"
     },
     {
       "path": "positives/generated.py",
-      "line": 109,
+      "line": 114,
       "modelId": "imagen-4.0-ultra-generate-001"
     },
     {
       "path": "positives/generated.ts",
-      "line": 110,
+      "line": 115,
       "modelId": "imagen-4.0-fast-generate-001"
     },
     {
       "path": "positives/generated.py",
-      "line": 110,
+      "line": 115,
       "modelId": "imagen-4.0-fast-generate-001"
     },
     {
       "path": "positives/generated.ts",
-      "line": 111,
+      "line": 116,
       "modelId": "gemini-robotics-er-1.5-preview"
     },
     {
       "path": "positives/generated.py",
-      "line": 111,
+      "line": 116,
       "modelId": "gemini-robotics-er-1.5-preview"
     },
     {
       "path": "positives/generated.ts",
-      "line": 112,
+      "line": 117,
       "modelId": "embed-english-v2.0"
     },
     {
       "path": "positives/generated.py",
-      "line": 112,
+      "line": 117,
       "modelId": "embed-english-v2.0"
     },
     {
       "path": "positives/generated.ts",
-      "line": 113,
+      "line": 118,
       "modelId": "embed-english-light-v2.0"
     },
     {
       "path": "positives/generated.py",
-      "line": 113,
+      "line": 118,
       "modelId": "embed-english-light-v2.0"
     },
     {
       "path": "positives/generated.ts",
-      "line": 114,
+      "line": 119,
       "modelId": "embed-multilingual-v2.0"
     },
     {
       "path": "positives/generated.py",
-      "line": 114,
+      "line": 119,
       "modelId": "embed-multilingual-v2.0"
     },
     {
       "path": "positives/generated.ts",
-      "line": 115,
+      "line": 120,
       "modelId": "c4ai-aya-expanse-8b"
     },
     {
       "path": "positives/generated.py",
-      "line": 115,
+      "line": 120,
       "modelId": "c4ai-aya-expanse-8b"
     },
     {
       "path": "positives/generated.ts",
-      "line": 116,
+      "line": 121,
       "modelId": "c4ai-aya-vision-8b"
     },
     {
       "path": "positives/generated.py",
-      "line": 116,
+      "line": 121,
       "modelId": "c4ai-aya-vision-8b"
     },
     {
       "path": "positives/generated.ts",
-      "line": 117,
+      "line": 122,
       "modelId": "grok-4-1-fast-reasoning"
     },
     {
       "path": "positives/generated.py",
-      "line": 117,
+      "line": 122,
       "modelId": "grok-4-1-fast-reasoning"
     },
     {
       "path": "positives/generated.ts",
-      "line": 118,
+      "line": 123,
       "modelId": "grok-4-1-fast-non-reasoning"
     },
     {
       "path": "positives/generated.py",
-      "line": 118,
+      "line": 123,
       "modelId": "grok-4-1-fast-non-reasoning"
-    },
-    {
-      "path": "positives/generated.ts",
-      "line": 119,
-      "modelId": "grok-4-fast-reasoning"
-    },
-    {
-      "path": "positives/generated.py",
-      "line": 119,
-      "modelId": "grok-4-fast-reasoning"
-    },
-    {
-      "path": "positives/generated.ts",
-      "line": 120,
-      "modelId": "grok-4-fast-non-reasoning"
-    },
-    {
-      "path": "positives/generated.py",
-      "line": 120,
-      "modelId": "grok-4-fast-non-reasoning"
-    },
-    {
-      "path": "positives/generated.ts",
-      "line": 121,
-      "modelId": "grok-4-0709"
-    },
-    {
-      "path": "positives/generated.py",
-      "line": 121,
-      "modelId": "grok-4-0709"
-    },
-    {
-      "path": "positives/generated.ts",
-      "line": 122,
-      "modelId": "grok-code-fast-1"
-    },
-    {
-      "path": "positives/generated.py",
-      "line": 122,
-      "modelId": "grok-code-fast-1"
-    },
-    {
-      "path": "positives/generated.ts",
-      "line": 123,
-      "modelId": "grok-3"
-    },
-    {
-      "path": "positives/generated.py",
-      "line": 123,
-      "modelId": "grok-3"
     },
     {
       "path": "positives/generated.ts",
       "line": 124,
+      "modelId": "grok-4-fast-reasoning"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 124,
+      "modelId": "grok-4-fast-reasoning"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 125,
+      "modelId": "grok-4-fast-non-reasoning"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 125,
+      "modelId": "grok-4-fast-non-reasoning"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 126,
+      "modelId": "grok-4-0709"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 126,
+      "modelId": "grok-4-0709"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 127,
+      "modelId": "grok-code-fast-1"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 127,
+      "modelId": "grok-code-fast-1"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 128,
+      "modelId": "grok-3"
+    },
+    {
+      "path": "positives/generated.py",
+      "line": 128,
+      "modelId": "grok-3"
+    },
+    {
+      "path": "positives/generated.ts",
+      "line": 129,
       "modelId": "grok-imagine-image-pro"
     },
     {
       "path": "positives/generated.py",
-      "line": 124,
+      "line": 129,
       "modelId": "grok-imagine-image-pro"
     }
   ],
@@ -1944,6 +1994,38 @@
     },
     {
       "path": "negatives/generated.ts",
+      "description": "unrelated documentation string for whisper-1"
+    },
+    {
+      "path": "negatives/generated.py",
+      "description": "unrelated display label for whisper-1"
+    },
+    {
+      "path": "negatives/generated.ts",
+      "description": "unrelated documentation string for gpt-4o-transcribe"
+    },
+    {
+      "path": "negatives/generated.py",
+      "description": "unrelated display label for gpt-4o-transcribe"
+    },
+    {
+      "path": "negatives/generated.ts",
+      "description": "unrelated documentation string for gpt-4o-mini-transcribe"
+    },
+    {
+      "path": "negatives/generated.py",
+      "description": "unrelated display label for gpt-4o-mini-transcribe"
+    },
+    {
+      "path": "negatives/generated.ts",
+      "description": "unrelated documentation string for gpt-4o-transcribe-diarize"
+    },
+    {
+      "path": "negatives/generated.py",
+      "description": "unrelated display label for gpt-4o-transcribe-diarize"
+    },
+    {
+      "path": "negatives/generated.ts",
       "description": "unrelated documentation string for claude-mythos-preview"
     },
     {
@@ -2045,6 +2127,14 @@
     {
       "path": "negatives/generated.py",
       "description": "unrelated display label for claude-3-sonnet-20240229"
+    },
+    {
+      "path": "negatives/generated.ts",
+      "description": "unrelated documentation string for gemini-omni-flash-preview"
+    },
+    {
+      "path": "negatives/generated.py",
+      "description": "unrelated display label for gemini-omni-flash-preview"
     },
     {
       "path": "negatives/generated.ts",

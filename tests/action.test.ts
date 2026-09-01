@@ -9,10 +9,30 @@ import type { LifecycleEntry } from "../src/types.js";
 
 test("ships a current validated lifecycle database", async () => {
   const database = await loadDatabase();
-  assert.equal(database.checkedAt, "2026-08-14");
-  assert.equal(database.entries.length, 124);
-  assert.equal(new Set(database.entries.map((entry) => entry.modelId)).size, 124);
+  assert.equal(database.checkedAt, "2026-09-01");
+  assert.equal(database.entries.length, 129);
+  assert.equal(new Set(database.entries.map((entry) => entry.modelId)).size, 129);
   assert.equal(database.apiDeprecations.length, 4);
+
+  const entries = new Map(database.entries.map((entry) => [entry.modelId, entry]));
+  for (const modelId of [
+    "whisper-1",
+    "gpt-4o-transcribe",
+    "gpt-4o-mini-transcribe",
+    "gpt-4o-transcribe-diarize",
+  ]) {
+    const entry = entries.get(modelId);
+    assert.equal(entry?.provider, "openai");
+    assert.equal(entry?.shutdownDate, "2027-02-26");
+    assert.equal(entry?.replacement, "gpt-transcribe");
+    assert.equal(entry?.replacementConfidence, "medium");
+  }
+
+  const geminiOmni = entries.get("gemini-omni-flash-preview");
+  assert.equal(geminiOmni?.provider, "gemini");
+  assert.equal(geminiOmni?.shutdownDate, "2026-09-30");
+  assert.equal(geminiOmni?.replacement, "gemini-omni-1.1-flash");
+  assert.equal(geminiOmni?.replacementConfidence, "high");
 });
 
 test("detects known IDs and preserves dynamic model uncertainty", async () => {
@@ -43,6 +63,19 @@ test("packages the checked-in Action runtime for GitHub-hosted Linux x64", async
   const packaging = await readFile("scripts/package-action.mjs", "utf8");
   assert.match(packaging, /SUNSETPR_ACTION_PLATFORM\s*\?\?\s*"linux"/);
   assert.match(packaging, /SUNSETPR_ACTION_ARCHITECTURE\s*\?\?\s*"x64"/);
+});
+
+test("monitors focused official Markdown when a provider exposes it", async () => {
+  const monitor = await readFile("scripts/verify-official-sources.mjs", "utf8");
+  assert.match(
+    monitor,
+    /fetchUrl: "https:\/\/developers\.openai\.com\/api\/docs\/deprecations\.md"/,
+  );
+  assert.match(
+    monitor,
+    /fetchUrl: "https:\/\/platform\.claude\.com\/docs\/en\/about-claude\/model-deprecations\.md"/,
+  );
+  assert.match(monitor, /acceptedContentTypes: \["text\/markdown"\]/);
 });
 
 test("documents installation and safety boundaries in Japanese", async () => {
@@ -229,6 +262,7 @@ await client.evals.create({ name: "quality" });`,
   const evals = apiFindings.find((finding) => finding.apiId === "evals-api");
 
   assert.equal(assistants?.shutdownDate, "2026-08-26");
+  assert.equal(assistants?.status, "retired");
   assert.equal(assistants?.replacement, "Responses API and Conversations API");
   assert.equal(videos?.shutdownDate, "2026-09-24");
   assert.equal(videos?.replacement, null);
@@ -261,7 +295,7 @@ await client.evals.create({ name: "quality" });`,
   assert.match(summary, /Responses API and Conversations API/);
   assert.match(summary, /no official replacement is listed/);
   assert.match(summary, /Promptfoo/);
-  assert.match(summary, /Human review required/);
+  assert.match(summary, /Immediate action required/);
 });
 
 test("does not classify unrelated prompt or eval clients as OpenAI APIs", async () => {

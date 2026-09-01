@@ -80,6 +80,11 @@ test("rejects a retired model without a shutdown date", async () => {
   await assert.rejects(loadDatabase(databasePath), /cannot be retired without a shutdown date/);
 });
 
+test("rejects a deprecated model after its shutdown date", async () => {
+  const databasePath = await writeDatabase([entry({ shutdownDate: "2026-07-18" })]);
+  await assert.rejects(loadDatabase(databasePath), /must be retired after its shutdown date/);
+});
+
 test("rejects a high-confidence replacement that is itself deprecated", async () => {
   const databasePath = await writeDatabase([
     entry(),
