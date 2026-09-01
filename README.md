@@ -29,8 +29,8 @@ SunsetPRは、通知だけで終わらせず、影響箇所を見つけ、検証
 
 次の内容を `.github/workflows/model-lifecycle.yml` として保存し、通常のプルリクエストまたはpushで実行します。
 最初は `fail-on: never` のまま、検出結果だけを確認してください。
-レビュー済み公開版 `v0.3.0` はOpenAI、Anthropic、Google Gemini、Cohere、xAIが対象です。
-下の固定SHAは、Linux x64向けにパッケージと自己テストを確認した `v0.3.0` 公開版です。`@v0` は互換更新を自動で受け取る場合だけ使ってください。
+レビュー済み公開版 `v0.3.1` はOpenAI、Anthropic、Google Gemini、Cohere、xAIが対象です。
+下の固定SHAは、Linux x64向けにパッケージと自己テストを確認した `v0.3.1` 公開版です。`@v0` は互換更新を自動で受け取る場合だけ使ってください。
 
 実行後はGitHub ActionsのJob Summary、`.sunsetpr/report.json`、`.sunsetpr/summary.md` に、終了日・影響箇所・公式URL・次の判断を出力します。
 無料Actionは `contents: read` だけを要求し、リポジトリのコードをSunsetPRや外部AIへ送信しません。
@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
-      - uses: synergia-yoshi/sunsetpr-action@5765d08ee1a9b6a0e2cb8a6c9f19ad9ad9f1fa6e # v0.3.0
+      - uses: synergia-yoshi/sunsetpr-action@e8a72099d7b398279cea7e1ae6ef4770b4a31e48 # v0.3.1
         with:
           fail-on: never
 ```
@@ -177,9 +177,9 @@ The `v0` release is packaged and tested for GitHub-hosted `ubuntu-latest` runner
 
 ## Versioning
 
-The installation snippet pins the current reviewed `v0.3.0` Linux runtime by full commit SHA. It has
+The installation snippet pins the current reviewed `v0.3.1` Linux runtime by full commit SHA. It has
 passed Linux packaging and self-tests. Review release notes and public CI before updating both the SHA
-and its version comment. The immutable `@v0.3.0` tag is available for readability; use floating `@v0`
+and its version comment. The immutable `@v0.3.1` tag is available for readability; use floating `@v0`
 only when automatic compatible-beta updates are an intentional tradeoff.
 
 Apache-2.0. SunsetPR is independent of OpenAI, Anthropic, Google, Cohere, xAI, and GitHub.
