@@ -94,7 +94,7 @@ function validateApiEntry(value: unknown, index: number): asserts value is ApiLi
     !["Assistants API", "Videos API", "Reusable prompts API", "Evals API"].includes(
       String(entry.apiName),
     ) ||
-    entry.status !== "deprecated" ||
+    !STATUSES.has(String(entry.status)) ||
     !["OpenAI Assistants", "OpenAI Videos", "OpenAI Prompts", "OpenAI Evals"].includes(
       String(entry.sdk),
     )
@@ -145,6 +145,24 @@ export async function loadDatabase(explicitPath?: string): Promise<LifecycleData
   }
   database.entries.forEach(validateEntry);
   database.apiDeprecations.forEach(validateApiEntry);
+  for (const entry of database.entries) {
+    if (
+      entry.status === "deprecated" &&
+      entry.shutdownDate !== null &&
+      entry.shutdownDate < database.checkedAt
+    ) {
+      throw new Error(
+        `Lifecycle entry ${entry.modelId} must be retired after its shutdown date ${entry.shutdownDate}`,
+      );
+    }
+  }
+  for (const entry of database.apiDeprecations) {
+    if (entry.status === "deprecated" && entry.shutdownDate < database.checkedAt) {
+      throw new Error(
+        `API lifecycle entry ${entry.apiId} must be retired after its shutdown date ${entry.shutdownDate}`,
+      );
+    }
+  }
   const modelIds = new Set<string>();
   const entriesByModelId = new Map<string, LifecycleEntry>();
   for (const entry of database.entries) {

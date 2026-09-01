@@ -30,7 +30,7 @@
           "apiName": {
             "enum": ["Assistants API", "Videos API", "Reusable prompts API", "Evals API"]
           },
-          "status": { "const": "deprecated" },
+          "status": { "enum": ["deprecated", "retired"] },
           "shutdownDate": { "type": "string", "format": "date" },
           "replacement": {
             "anyOf": [
