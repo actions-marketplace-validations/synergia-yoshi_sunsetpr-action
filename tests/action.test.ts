@@ -65,6 +65,16 @@ test("packages the checked-in Action runtime for GitHub-hosted Linux x64", async
   assert.match(packaging, /SUNSETPR_ACTION_ARCHITECTURE\s*\?\?\s*"x64"/);
 });
 
+test("groups low-risk Dependabot updates without mixing runtime dependencies", async () => {
+  const dependabot = await readFile(".github/dependabot.yml", "utf8");
+  assert.match(
+    dependabot,
+    /development-dependencies:\n\s+dependency-type: development/,
+  );
+  assert.match(dependabot, /github-actions:\n\s+patterns:\n\s+- "\*"/);
+  assert.doesNotMatch(dependabot, /dependency-type: production/);
+});
+
 test("monitors focused official Markdown when a provider exposes it", async () => {
   const monitor = await readFile("scripts/verify-official-sources.mjs", "utf8");
   assert.match(
