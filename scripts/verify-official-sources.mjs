@@ -15,21 +15,26 @@ const apiSourceTerms = {
 const sources = {
   openai: {
     url: "https://developers.openai.com/api/docs/deprecations",
+    fetchUrl: "https://developers.openai.com/api/docs/deprecations.md",
     hostname: "developers.openai.com",
     pathPrefix: "/api/docs/deprecations",
+    acceptedContentTypes: ["text/markdown"],
     tokenPattern:
       /\b(?:babbage|chatgpt|codex|computer-use|dall-e|davinci|gpt|o[1-9]|omni-moderation|text-embedding|text-moderation|tts|whisper)[a-z0-9._-]{1,80}\b/g,
   },
   anthropic: {
     url: "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+    fetchUrl: "https://platform.claude.com/docs/en/about-claude/model-deprecations.md",
     hostname: "platform.claude.com",
     pathPrefix: "/docs/en/about-claude/model-deprecations",
+    acceptedContentTypes: ["text/markdown"],
     tokenPattern: /\bclaude-[a-z0-9._-]{2,80}\b/g,
   },
   gemini: {
     url: "https://ai.google.dev/gemini-api/docs/deprecations",
     hostname: "ai.google.dev",
     pathPrefix: "/gemini-api/docs/deprecations",
+    acceptedContentTypes: ["text/html"],
     languageQuery: "en",
     tokenPattern: /\bgemini-[a-z0-9._-]{2,80}\b/g,
   },
@@ -37,12 +42,14 @@ const sources = {
     url: "https://docs.cohere.com/docs/deprecations",
     hostname: "docs.cohere.com",
     pathPrefix: "/docs/deprecations",
+    acceptedContentTypes: ["text/html"],
     tokenPattern: /\b(?:c4ai-aya|command|embed)[a-z0-9._-]{1,80}\b/g,
   },
   xai: {
     url: "https://docs.x.ai/developers/migration/may-15-retirement",
     hostname: "docs.x.ai",
     pathPrefix: "/developers/migration/may-15-retirement",
+    acceptedContentTypes: ["text/html"],
     tokenPattern: /\bgrok-[a-z0-9._-]{1,80}\b/g,
   },
 };
@@ -120,14 +127,14 @@ function differences(current, previous) {
 }
 
 async function fetchOfficialSource(provider, definition) {
-  const requestedUrl = new URL(definition.url);
+  const requestedUrl = new URL(definition.fetchUrl ?? definition.url);
   if (definition.languageQuery) {
     requestedUrl.searchParams.set("hl", definition.languageQuery);
   }
   const response = await fetch(requestedUrl, {
     cache: "no-store",
     headers: {
-      Accept: "text/html",
+      Accept: definition.acceptedContentTypes.join(", "),
       "Accept-Language": "en-US,en;q=0.9",
       "User-Agent": "SunsetPR-official-source-monitor/0.1",
     },
@@ -146,7 +153,11 @@ async function fetchOfficialSource(provider, definition) {
     );
   }
   const contentType = response.headers.get("content-type") ?? "";
-  if (!contentType.toLowerCase().includes("text/html")) {
+  if (
+    !definition.acceptedContentTypes.some((acceptedType) =>
+      contentType.toLowerCase().includes(acceptedType),
+    )
+  ) {
     throw new Error(`${provider} official source returned unexpected content type ${contentType}`);
   }
   const bytes = Buffer.from(await response.arrayBuffer());

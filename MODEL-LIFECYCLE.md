@@ -1,6 +1,6 @@
 # AI model shutdown dates and official replacements
 
-Machine-readable lifecycle data for 124 exact model IDs and aliases, checked against provider documentation on 2026-08-14.
+Machine-readable lifecycle data for 129 exact model IDs and aliases, checked against provider documentation on 2026-09-01.
 
 Provider documentation is the only source of truth. A listed replacement can still differ in behavior, quality, latency, price, limits, or supported parameters. `medium` and `low` replacement confidence are report-only by default.
 
@@ -11,25 +11,25 @@ Use the [free SunsetPR GitHub Action](README.md#start-in-one-minute) to find the
 | Model ID | Status | Shutdown date | Official replacement | Confidence | Primary source |
 | --- | --- | --- | --- | --- | --- |
 | `gpt-4.5-preview` | retired | 2025-07-14 | `gpt-4.1` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `computer-use-preview` | deprecated | 2026-07-23 | `gpt-5.6-terra` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `computer-use-preview-2025-03-11` | deprecated | 2026-07-23 | `gpt-5.6-terra` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `gpt-4o-mini-search-preview-2025-03-11` | deprecated | 2026-07-23 | `gpt-5.6-terra` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `gpt-4o-search-preview-2025-03-11` | deprecated | 2026-07-23 | `gpt-5.6-terra` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `gpt-5-chat-latest` | deprecated | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `gpt-5-codex` | deprecated | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `gpt-5.1-chat-latest` | deprecated | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `gpt-5.1-codex` | deprecated | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `gpt-5.1-codex-max` | deprecated | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `gpt-5.1-codex-mini` | deprecated | 2026-07-23 | `gpt-5.6-terra` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `gpt-5.2-codex` | deprecated | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `gpt-audio-mini-2025-10-06` | deprecated | 2026-07-23 | `gpt-audio-1.5` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `gpt-realtime-mini-2025-10-06` | deprecated | 2026-07-23 | `gpt-realtime-2.1-mini` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `o3-deep-research` | deprecated | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `o3-deep-research-2025-06-26` | deprecated | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `o4-mini-deep-research` | deprecated | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `o4-mini-deep-research-2025-06-26` | deprecated | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `gpt-5.2-chat-latest` | deprecated | 2026-08-10 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
-| `gpt-5.3-chat-latest` | deprecated | 2026-08-10 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `computer-use-preview` | retired | 2026-07-23 | `gpt-5.6-terra` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `computer-use-preview-2025-03-11` | retired | 2026-07-23 | `gpt-5.6-terra` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `gpt-4o-mini-search-preview-2025-03-11` | retired | 2026-07-23 | `gpt-5.6-terra` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `gpt-4o-search-preview-2025-03-11` | retired | 2026-07-23 | `gpt-5.6-terra` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `gpt-5-chat-latest` | retired | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `gpt-5-codex` | retired | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `gpt-5.1-chat-latest` | retired | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `gpt-5.1-codex` | retired | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `gpt-5.1-codex-max` | retired | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `gpt-5.1-codex-mini` | retired | 2026-07-23 | `gpt-5.6-terra` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `gpt-5.2-codex` | retired | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `gpt-audio-mini-2025-10-06` | retired | 2026-07-23 | `gpt-audio-1.5` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `gpt-realtime-mini-2025-10-06` | retired | 2026-07-23 | `gpt-realtime-2.1-mini` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `o3-deep-research` | retired | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `o3-deep-research-2025-06-26` | retired | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `o4-mini-deep-research` | retired | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `o4-mini-deep-research-2025-06-26` | retired | 2026-07-23 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `gpt-5.2-chat-latest` | retired | 2026-08-10 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `gpt-5.3-chat-latest` | retired | 2026-08-10 | `gpt-5.6-sol` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
 | `babbage-002` | deprecated | 2026-09-28 | `gpt-5.6-terra` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
 | `davinci-002` | deprecated | 2026-09-28 | `gpt-5.6-terra` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
 | `gpt-3.5-turbo-1106` | deprecated | 2026-09-28 | `gpt-5.6-terra` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
@@ -75,6 +75,10 @@ Use the [free SunsetPR GitHub Action](README.md#start-in-one-minute) to find the
 | `gpt-audio-mini` | deprecated | 2027-01-20 | `gpt-audio-1.5` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
 | `gpt-realtime` | deprecated | 2027-01-20 | `gpt-realtime-2.1` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
 | `gpt-realtime-mini` | deprecated | 2027-01-20 | `gpt-realtime-2.1-mini` | high | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `gpt-4o-mini-transcribe` | deprecated | 2027-02-26 | `gpt-transcribe` | medium | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `gpt-4o-transcribe` | deprecated | 2027-02-26 | `gpt-transcribe` | medium | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `gpt-4o-transcribe-diarize` | deprecated | 2027-02-26 | `gpt-transcribe` | medium | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
+| `whisper-1` | deprecated | 2027-02-26 | `gpt-transcribe` | medium | [Official documentation](https://developers.openai.com/api/docs/deprecations) |
 
 ## Anthropic
 
@@ -124,10 +128,11 @@ Use the [free SunsetPR GitHub Action](README.md#start-in-one-minute) to find the
 | `gemini-2.0-flash-lite-001` | retired | 2026-06-01 | `gemini-3.1-flash-lite` | medium | [Official documentation](https://ai.google.dev/gemini-api/docs/deprecations) |
 | `gemini-3-pro-image-preview` | retired | 2026-06-25 | `gemini-3-pro-image` | high | [Official documentation](https://ai.google.dev/gemini-api/docs/deprecations) |
 | `gemini-3.1-flash-image-preview` | retired | 2026-06-25 | `gemini-3.1-flash-image` | high | [Official documentation](https://ai.google.dev/gemini-api/docs/deprecations) |
-| `embedding-2-preview` | deprecated | 2026-08-10 | `gemini-embedding-2` | high | [Official documentation](https://ai.google.dev/gemini-api/docs/deprecations) |
-| `imagen-4.0-fast-generate-001` | deprecated | 2026-08-17 | `gemini-3.1-flash-image` | high | [Official documentation](https://ai.google.dev/gemini-api/docs/deprecations) |
-| `imagen-4.0-generate-001` | deprecated | 2026-08-17 | `gemini-3.1-flash-image` | high | [Official documentation](https://ai.google.dev/gemini-api/docs/deprecations) |
-| `imagen-4.0-ultra-generate-001` | deprecated | 2026-08-17 | `gemini-3.1-flash-image` | high | [Official documentation](https://ai.google.dev/gemini-api/docs/deprecations) |
+| `embedding-2-preview` | retired | 2026-08-10 | `gemini-embedding-2` | high | [Official documentation](https://ai.google.dev/gemini-api/docs/deprecations) |
+| `imagen-4.0-fast-generate-001` | retired | 2026-08-17 | `gemini-3.1-flash-image` | high | [Official documentation](https://ai.google.dev/gemini-api/docs/deprecations) |
+| `imagen-4.0-generate-001` | retired | 2026-08-17 | `gemini-3.1-flash-image` | high | [Official documentation](https://ai.google.dev/gemini-api/docs/deprecations) |
+| `imagen-4.0-ultra-generate-001` | retired | 2026-08-17 | `gemini-3.1-flash-image` | high | [Official documentation](https://ai.google.dev/gemini-api/docs/deprecations) |
+| `gemini-omni-flash-preview` | deprecated | 2026-09-30 | `gemini-omni-1.1-flash` | high | [Official documentation](https://ai.google.dev/gemini-api/docs/deprecations) |
 | `gemini-2.5-flash-image` | deprecated | 2026-10-02 | `gemini-3.1-flash-image-preview` | medium | [Official documentation](https://ai.google.dev/gemini-api/docs/deprecations) |
 | `gemini-3.1-flash-lite` | deprecated | 2027-05-07 | `gemini-3.5-flash-lite` | high | [Official documentation](https://ai.google.dev/gemini-api/docs/deprecations) |
 | `gemini-embedding-001` | deprecated | 2028-05-14 | `gemini-embedding-2` | high | [Official documentation](https://ai.google.dev/gemini-api/docs/deprecations) |

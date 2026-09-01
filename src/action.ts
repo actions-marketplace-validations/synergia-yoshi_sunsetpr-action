@@ -68,7 +68,9 @@ export function renderAnnotation(finding: Finding): string {
       : finding.kind === "migration_risk"
         ? "warning"
         : finding.kind === "api_deprecation"
-          ? "warning"
+          ? finding.status === "retired"
+            ? "error"
+            : "warning"
           : finding.status === "retired"
             ? "error"
             : "warning";
@@ -78,7 +80,7 @@ export function renderAnnotation(finding: Finding): string {
       : finding.kind === "migration_risk"
         ? "SunsetPR: deterministic migration risk"
         : finding.kind === "api_deprecation"
-          ? "SunsetPR: deprecated API surface"
+          ? `SunsetPR: ${finding.status} API surface`
           : `SunsetPR: ${finding.provider} model ${finding.status}`;
   const message =
     finding.kind === "runtime_check"
@@ -122,7 +124,7 @@ export function renderActionSummary(report: ScanReport): string {
     .filter((finding) => finding.kind === "api_deprecation")
     .map(
       (finding) =>
-        `- ${inlineCode(`${finding.location.path}:${finding.location.line}`)} — ${inlineCode(finding.apiId)} shuts down ${finding.shutdownDate}; ${finding.replacement ? `migrate to ${escapeMarkdown(finding.replacement)}` : "no official replacement is listed"} ([official](${finding.sourceUrl}))`,
+        `- ${inlineCode(`${finding.location.path}:${finding.location.line}`)} — ${inlineCode(finding.apiId)} ${finding.status === "retired" ? "shut down" : "shuts down"} ${finding.shutdownDate}; ${finding.replacement ? `migrate to ${escapeMarkdown(finding.replacement)}` : "no official replacement is listed"} ([official](${finding.sourceUrl}))`,
     )
     .join("\n");
   const migrationRiskRows = report.findings
