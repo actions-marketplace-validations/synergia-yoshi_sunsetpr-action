@@ -1,5 +1,5 @@
 name: SunsetPR AI Model Lifecycle Check
-description: Detect deprecated OpenAI, Anthropic, and Gemini model IDs and API surfaces with official evidence.
+description: Detect deprecated OpenAI, Anthropic, Gemini, Cohere, and xAI model IDs and API surfaces with official evidence.
 author: SunsetPR
 inputs:
   path:
@@ -7,13 +7,17 @@ inputs:
     required: false
     default: "."
   fail-on:
-    description: "Failure threshold: never, deprecated, or retired"
+    description: "Failure threshold: never (Public Beta default), deprecated, or retired"
     required: false
     default: "never"
   report:
     description: JSON report path
     required: false
     default: ".sunsetpr/report.json"
+  summary:
+    description: Shareable Markdown migration-decision report path
+    required: false
+    default: ".sunsetpr/summary.md"
 outputs:
   findings:
     description: Number of model findings
@@ -21,14 +25,22 @@ outputs:
     description: Number of unresolved dynamic model references
   api-deprecations:
     description: Number of deprecated API surface findings
+  migration-risks:
+    description: Number of deterministic provider migration risks
   retired:
     description: Number of references to retired models
   deprecated:
     description: Number of references to deprecated models
   safe-auto-fixes:
-    description: Number of findings with high-confidence code context and official replacement
+    description: Number of findings with a high-confidence official replacement
+  decision:
+    description: Decision status (clear, repair_ready, review_required, or urgent)
+  nearest-shutdown:
+    description: Nearest affected shutdown date, when present
   report:
     description: Absolute path to the generated JSON report
+  summary:
+    description: Absolute path to the generated Markdown decision report
 runs:
   using: node24
   main: dist/action/runner.js

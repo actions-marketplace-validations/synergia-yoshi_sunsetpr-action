@@ -44,9 +44,15 @@ jobs:
           API_DEPRECATIONS: ${{ steps.sunsetpr.outputs['api-deprecations'] }}
           RUNTIME_CHECKS: ${{ steps.sunsetpr.outputs['runtime-checks'] }}
           SAFE_AUTO_FIXES: ${{ steps.sunsetpr.outputs['safe-auto-fixes'] }}
+          DECISION: ${{ steps.sunsetpr.outputs.decision }}
+          SUMMARY: ${{ steps.sunsetpr.outputs.summary }}
         run: |
           test "$FINDINGS" = "1"
           test "$API_DEPRECATIONS" = "0"
           test "$RUNTIME_CHECKS" = "1"
           test "$SAFE_AUTO_FIXES" = "1"
+          test "$DECISION" = "urgent"
+          test "$SUMMARY" = "$GITHUB_WORKSPACE/.sunsetpr/summary.md"
           node -e 'const report = require("./.sunsetpr/report.json"); if (report.summary.modelReferences !== 1 || report.summary.apiDeprecations !== 0 || report.summary.runtimeChecks !== 1) process.exit(1)'
+          grep -q "Immediate action required" .sunsetpr/summary.md
+          grep -qi "official" .sunsetpr/summary.md

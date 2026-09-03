@@ -1,4 +1,4 @@
-export type Provider = "openai" | "anthropic" | "gemini";
+export type Provider = "openai" | "anthropic" | "gemini" | "cohere" | "xai";
 export type LifecycleStatus = "deprecated" | "retired";
 export type Confidence = "high" | "medium" | "low";
 
@@ -6,7 +6,7 @@ export interface LifecycleEntry {
   provider: Provider;
   modelId: string;
   status: LifecycleStatus;
-  shutdownDate: string;
+  shutdownDate: string | null;
   replacement: string;
   sourceUrl: string;
   replacementConfidence: Confidence;
@@ -15,13 +15,13 @@ export interface LifecycleEntry {
 
 export interface ApiLifecycleEntry {
   provider: "openai";
-  apiId: "assistants-api" | "videos-api";
-  apiName: "Assistants API" | "Videos API";
-  status: "deprecated";
+  apiId: "assistants-api" | "videos-api" | "reusable-prompts-api" | "evals-api";
+  apiName: "Assistants API" | "Videos API" | "Reusable prompts API" | "Evals API";
+  status: LifecycleStatus;
   shutdownDate: string;
   replacement: string | null;
   sourceUrl: string;
-  sdk: "OpenAI Assistants" | "OpenAI Videos";
+  sdk: "OpenAI Assistants" | "OpenAI Videos" | "OpenAI Prompts" | "OpenAI Evals";
   notes: string;
 }
 
@@ -48,7 +48,7 @@ export interface ModelFinding {
   provider: Provider;
   modelId: string;
   status: LifecycleStatus;
-  shutdownDate: string;
+  shutdownDate: string | null;
   replacement: string;
   sourceUrl: string;
   sourceKind: ReferenceSource;
@@ -74,18 +74,37 @@ export interface ApiDeprecationFinding {
   id: string;
   kind: "api_deprecation";
   provider: "openai";
-  apiId: "assistants-api" | "videos-api";
-  status: "deprecated";
+  apiId: "assistants-api" | "videos-api" | "reusable-prompts-api" | "evals-api";
+  status: LifecycleStatus;
   shutdownDate: string;
   replacement: string | null;
   sourceUrl: string;
   confidence: "high";
-  sdk: "OpenAI Assistants" | "OpenAI Videos";
+  sdk: "OpenAI Assistants" | "OpenAI Videos" | "OpenAI Prompts" | "OpenAI Evals";
   location: Location;
   message: string;
 }
 
-export type Finding = ModelFinding | RuntimeCheckFinding | ApiDeprecationFinding;
+export interface MigrationRiskFinding {
+  id: string;
+  kind: "migration_risk";
+  provider: "anthropic";
+  ruleId: "anthropic-unsupported-sampling-parameter";
+  parameter: "temperature" | "top_p" | "top_k";
+  targetModel: string;
+  confidence: Confidence;
+  autoFix: boolean;
+  oldText: string;
+  sourceUrl: string;
+  location: Location;
+  message: string;
+}
+
+export type Finding =
+  | ModelFinding
+  | RuntimeCheckFinding
+  | ApiDeprecationFinding
+  | MigrationRiskFinding;
 
 export interface ScanReport {
   schemaVersion: 1;
@@ -105,6 +124,7 @@ export interface ScanReport {
     modelReferences: number;
     apiDeprecations: number;
     runtimeChecks: number;
+    migrationRisks: number;
     deprecated: number;
     retired: number;
     safeAutoFixes: number;
@@ -118,6 +138,8 @@ export interface PlannedEdit {
   oldText: string;
   newText: string;
   findingId: string;
+  line?: number;
+  editKind?: "model_id" | "parameter_removal";
 }
 
 export interface VerificationStep {

@@ -1,1 +1,1 @@
-const testDescription = "gemini-2.5-flash";
+const testDescription = "gemini-3.1-flash-lite";

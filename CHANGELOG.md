@@ -2,8 +2,12 @@
 
 ## Unreleased
 
-- Pin every third-party GitHub Actions workflow dependency to a full commit SHA.
-- Complete the historical changelog and refresh support-form wording.
+- Refresh the official-source database to 124 model IDs and 4 API surfaces on 2026-08-14, preserving an unannounced Anthropic retirement date as unknown.
+- Add Cohere and xAI provider-owned lifecycle sources, report-only retirement entries, SDK-aware detection, weekly semantic fingerprints, catalog pages, and labeled regression cases.
+- Detect reusable OpenAI prompt objects and Evals API calls without applying unsafe semantic rewrites.
+- Add a shareable Markdown migration decision with deadline, next action, and official evidence.
+- Classify scans as `urgent`, `review_required`, `repair_ready`, or `clear` using deterministic rules.
+- Report officially documented Anthropic sampling-parameter migration risks.
 
 ## 0.2.0 — 2026-07-19
 

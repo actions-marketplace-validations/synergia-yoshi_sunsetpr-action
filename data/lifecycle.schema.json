@@ -24,9 +24,13 @@
         ],
         "properties": {
           "provider": { "const": "openai" },
-          "apiId": { "enum": ["assistants-api", "videos-api"] },
-          "apiName": { "enum": ["Assistants API", "Videos API"] },
-          "status": { "const": "deprecated" },
+          "apiId": {
+            "enum": ["assistants-api", "videos-api", "reusable-prompts-api", "evals-api"]
+          },
+          "apiName": {
+            "enum": ["Assistants API", "Videos API", "Reusable prompts API", "Evals API"]
+          },
+          "status": { "enum": ["deprecated", "retired"] },
           "shutdownDate": { "type": "string", "format": "date" },
           "replacement": {
             "anyOf": [
@@ -35,7 +39,9 @@
             ]
           },
           "sourceUrl": { "type": "string", "format": "uri" },
-          "sdk": { "enum": ["OpenAI Assistants", "OpenAI Videos"] },
+          "sdk": {
+            "enum": ["OpenAI Assistants", "OpenAI Videos", "OpenAI Prompts", "OpenAI Evals"]
+          },
           "notes": { "type": "string", "minLength": 1 }
         }
       }
@@ -56,10 +62,15 @@
           "notes"
         ],
         "properties": {
-          "provider": { "enum": ["openai", "anthropic", "gemini"] },
+          "provider": { "enum": ["openai", "anthropic", "gemini", "cohere", "xai"] },
           "modelId": { "type": "string", "minLength": 1 },
           "status": { "enum": ["deprecated", "retired"] },
-          "shutdownDate": { "type": "string", "format": "date" },
+          "shutdownDate": {
+            "anyOf": [
+              { "type": "string", "format": "date" },
+              { "type": "null" }
+            ]
+          },
           "replacement": { "type": "string", "minLength": 1 },
           "sourceUrl": { "type": "string", "format": "uri" },
           "replacementConfidence": { "enum": ["high", "medium", "low"] },

@@ -16,6 +16,8 @@ body:
         - OpenAI
         - Anthropic
         - Google Gemini
+        - Cohere
+        - xAI
         - Multiple supported providers
     validations:
       required: true

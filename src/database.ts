@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { ApiLifecycleEntry, LifecycleDatabase, LifecycleEntry } from "./types.js";
 
-const PROVIDERS = new Set(["openai", "anthropic", "gemini"]);
+const PROVIDERS = new Set(["openai", "anthropic", "gemini", "cohere", "xai"]);
 const STATUSES = new Set(["deprecated", "retired"]);
 const CONFIDENCES = new Set(["high", "medium", "low"]);
 const OFFICIAL_SOURCES = {
@@ -18,6 +18,14 @@ const OFFICIAL_SOURCES = {
   gemini: {
     hostname: "ai.google.dev",
     pathname: "/gemini-api/docs/deprecations",
+  },
+  cohere: {
+    hostname: "docs.cohere.com",
+    pathname: "/docs/deprecations",
+  },
+  xai: {
+    hostname: "docs.x.ai",
+    pathname: "/developers/migration/may-15-retirement",
   },
 } as const;
 
@@ -48,13 +56,16 @@ function validateEntry(value: unknown, index: number): asserts value is Lifecycl
   if (!CONFIDENCES.has(String(entry.replacementConfidence))) {
     throw new Error(`Lifecycle entry ${index} has an invalid replacement confidence`);
   }
-  for (const key of ["modelId", "shutdownDate", "replacement", "sourceUrl", "notes"]) {
+  for (const key of ["modelId", "replacement", "sourceUrl", "notes"]) {
     if (typeof entry[key] !== "string" || entry[key].length === 0) {
       throw new Error(`Lifecycle entry ${index} is missing ${key}`);
     }
   }
-  if (!isIsoDate(String(entry.shutdownDate))) {
+  if (entry.shutdownDate !== null && !isIsoDate(String(entry.shutdownDate))) {
     throw new Error(`Lifecycle entry ${index} has an invalid shutdown date`);
+  }
+  if (entry.status === "retired" && entry.shutdownDate === null) {
+    throw new Error(`Lifecycle entry ${index} cannot be retired without a shutdown date`);
   }
   const source = new URL(String(entry.sourceUrl));
   if (source.protocol !== "https:") {
@@ -77,10 +88,16 @@ function validateApiEntry(value: unknown, index: number): asserts value is ApiLi
   const entry = value as Record<string, unknown>;
   if (
     entry.provider !== "openai" ||
-    !["assistants-api", "videos-api"].includes(String(entry.apiId)) ||
-    !["Assistants API", "Videos API"].includes(String(entry.apiName)) ||
-    entry.status !== "deprecated" ||
-    !["OpenAI Assistants", "OpenAI Videos"].includes(String(entry.sdk))
+    !["assistants-api", "videos-api", "reusable-prompts-api", "evals-api"].includes(
+      String(entry.apiId),
+    ) ||
+    !["Assistants API", "Videos API", "Reusable prompts API", "Evals API"].includes(
+      String(entry.apiName),
+    ) ||
+    !STATUSES.has(String(entry.status)) ||
+    !["OpenAI Assistants", "OpenAI Videos", "OpenAI Prompts", "OpenAI Evals"].includes(
+      String(entry.sdk),
+    )
   ) {
     throw new Error(`API lifecycle entry ${index} has unsupported metadata`);
   }
@@ -128,6 +145,24 @@ export async function loadDatabase(explicitPath?: string): Promise<LifecycleData
   }
   database.entries.forEach(validateEntry);
   database.apiDeprecations.forEach(validateApiEntry);
+  for (const entry of database.entries) {
+    if (
+      entry.status === "deprecated" &&
+      entry.shutdownDate !== null &&
+      entry.shutdownDate < database.checkedAt
+    ) {
+      throw new Error(
+        `Lifecycle entry ${entry.modelId} must be retired after its shutdown date ${entry.shutdownDate}`,
+      );
+    }
+  }
+  for (const entry of database.apiDeprecations) {
+    if (entry.status === "deprecated" && entry.shutdownDate < database.checkedAt) {
+      throw new Error(
+        `API lifecycle entry ${entry.apiId} must be retired after its shutdown date ${entry.shutdownDate}`,
+      );
+    }
+  }
   const modelIds = new Set<string>();
   const entriesByModelId = new Map<string, LifecycleEntry>();
   for (const entry of database.entries) {

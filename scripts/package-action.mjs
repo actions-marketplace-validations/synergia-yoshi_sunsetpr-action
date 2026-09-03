@@ -12,10 +12,12 @@ const architectureNames = {
   x64: "X64",
 };
 
-const platformName = platformNames[process.platform];
-const architectureName = architectureNames[process.arch];
+const runtimePlatform = process.env.SUNSETPR_ACTION_PLATFORM ?? "linux";
+const runtimeArchitecture = process.env.SUNSETPR_ACTION_ARCHITECTURE ?? "x64";
+const platformName = platformNames[runtimePlatform];
+const architectureName = architectureNames[runtimeArchitecture];
 if (!platformName || !architectureName) {
-  throw new Error(`Unsupported Action build platform: ${process.platform}-${process.arch}`);
+  throw new Error(`Unsupported Action runtime: ${runtimePlatform}-${runtimeArchitecture}`);
 }
 
 const source = path.resolve(
@@ -44,5 +46,5 @@ for (const asset of assets) {
 }
 
 process.stdout.write(
-  `Packaged SunsetPR Action for ${process.platform}-${process.arch} with ${assets.length} runtime assets.\n`,
+  `Packaged SunsetPR Action for ${runtimePlatform}-${runtimeArchitecture} with ${assets.length} runtime assets.\n`,
 );

@@ -7,27 +7,50 @@ const baselineUrl = new URL("../data/official-source-fingerprints.json", import.
 const reportUrl = new URL("../.sunsetpr/official-source-check.md", import.meta.url);
 const writeBaseline = process.argv.includes("--write-baseline");
 const maximumResponseBytes = 2 * 1024 * 1024;
+const apiSourceTerms = {
+  "reusable-prompts-api": ["reusable prompt objects", "/v1/prompts"],
+  "evals-api": ["evals dashboard and api"],
+};
 
 const sources = {
   openai: {
     url: "https://developers.openai.com/api/docs/deprecations",
+    fetchUrl: "https://developers.openai.com/api/docs/deprecations.md",
     hostname: "developers.openai.com",
     pathPrefix: "/api/docs/deprecations",
+    acceptedContentTypes: ["text/markdown"],
     tokenPattern:
       /\b(?:babbage|chatgpt|codex|computer-use|dall-e|davinci|gpt|o[1-9]|omni-moderation|text-embedding|text-moderation|tts|whisper)[a-z0-9._-]{1,80}\b/g,
   },
   anthropic: {
     url: "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+    fetchUrl: "https://platform.claude.com/docs/en/about-claude/model-deprecations.md",
     hostname: "platform.claude.com",
     pathPrefix: "/docs/en/about-claude/model-deprecations",
+    acceptedContentTypes: ["text/markdown"],
     tokenPattern: /\bclaude-[a-z0-9._-]{2,80}\b/g,
   },
   gemini: {
     url: "https://ai.google.dev/gemini-api/docs/deprecations",
     hostname: "ai.google.dev",
     pathPrefix: "/gemini-api/docs/deprecations",
+    acceptedContentTypes: ["text/html"],
     languageQuery: "en",
     tokenPattern: /\bgemini-[a-z0-9._-]{2,80}\b/g,
+  },
+  cohere: {
+    url: "https://docs.cohere.com/docs/deprecations",
+    hostname: "docs.cohere.com",
+    pathPrefix: "/docs/deprecations",
+    acceptedContentTypes: ["text/html"],
+    tokenPattern: /\b(?:c4ai-aya|command|embed)[a-z0-9._-]{1,80}\b/g,
+  },
+  xai: {
+    url: "https://docs.x.ai/developers/migration/may-15-retirement",
+    hostname: "docs.x.ai",
+    pathPrefix: "/developers/migration/may-15-retirement",
+    acceptedContentTypes: ["text/html"],
+    tokenPattern: /\bgrok-[a-z0-9._-]{1,80}\b/g,
   },
 };
 
@@ -44,6 +67,7 @@ function fingerprint(html, tokenPattern) {
       /\b(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s+\d{1,2},\s+20\d{2}\b/g,
     ) ?? [];
   const normalizedWrittenDates = writtenDates
+    .map((value) => value.replace(/(\d{1,2})(?:st|nd|rd|th),/i, "$1,"))
     .map((value) => new Date(`${value} UTC`))
     .filter((value) => !Number.isNaN(value.getTime()))
     .map((value) => value.toISOString().slice(0, 10));
@@ -72,6 +96,23 @@ function sourceRepresentsDate(html, isoDate) {
       timeZone: "UTC",
     }).format(date),
   ];
+  const suffix =
+    day % 10 === 1 && day % 100 !== 11
+      ? "st"
+      : day % 10 === 2 && day % 100 !== 12
+        ? "nd"
+        : day % 10 === 3 && day % 100 !== 13
+          ? "rd"
+          : "th";
+  formats.push(
+    new Intl.DateTimeFormat("en-US", {
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
+    })
+      .format(date)
+      .replace(/\s+20\d{2}$/, ` ${day}${suffix}, ${year}`),
+  );
   const lowerCaseHtml = html.toLowerCase();
   return formats.some((value) => lowerCaseHtml.includes(value.toLowerCase()));
 }
@@ -86,14 +127,14 @@ function differences(current, previous) {
 }
 
 async function fetchOfficialSource(provider, definition) {
-  const requestedUrl = new URL(definition.url);
+  const requestedUrl = new URL(definition.fetchUrl ?? definition.url);
   if (definition.languageQuery) {
     requestedUrl.searchParams.set("hl", definition.languageQuery);
   }
   const response = await fetch(requestedUrl, {
     cache: "no-store",
     headers: {
-      Accept: "text/html",
+      Accept: definition.acceptedContentTypes.join(", "),
       "Accept-Language": "en-US,en;q=0.9",
       "User-Agent": "SunsetPR-official-source-monitor/0.1",
     },
@@ -112,7 +153,11 @@ async function fetchOfficialSource(provider, definition) {
     );
   }
   const contentType = response.headers.get("content-type") ?? "";
-  if (!contentType.toLowerCase().includes("text/html")) {
+  if (
+    !definition.acceptedContentTypes.some((acceptedType) =>
+      contentType.toLowerCase().includes(acceptedType),
+    )
+  ) {
     throw new Error(`${provider} official source returned unexpected content type ${contentType}`);
   }
   const bytes = Buffer.from(await response.arrayBuffer());
@@ -147,7 +192,7 @@ const report = [
   "",
   `Checked: ${checkedAt}`,
   "",
-  "This monitor fetches only the three configured provider-owned lifecycle pages. It compares model-like tokens and ISO dates with a committed semantic baseline, and verifies that every current database entry remains represented.",
+  "This monitor fetches only the five configured provider-owned lifecycle pages. It compares model-like tokens and ISO dates with a committed semantic baseline, and verifies that every current database entry remains represented.",
   "",
 ];
 let failed = false;
@@ -164,19 +209,29 @@ for (const [provider, definition] of Object.entries(sources)) {
       .filter((entry) => !source.html.includes(entry.modelId))
       .map((entry) => entry.modelId);
     const missingDates = entries
-      .filter((entry) => !sourceRepresentsDate(source.html, entry.shutdownDate))
+      .filter(
+        (entry) =>
+          entry.shutdownDate !== null && !sourceRepresentsDate(source.html, entry.shutdownDate),
+      )
       .map((entry) => `${entry.modelId}: ${entry.shutdownDate}`);
     const missingReplacements = entries
       .filter((entry) => !source.html.includes(entry.replacement))
       .map((entry) => `${entry.modelId}: ${entry.replacement}`);
+    const lowerCaseSource = source.html.toLowerCase();
     const missingApiNames = apiEntries
-      .filter((entry) => !source.html.includes(entry.apiName))
+      .filter((entry) => {
+        const terms = apiSourceTerms[entry.apiId] ?? [entry.apiName];
+        return !terms.some((term) => lowerCaseSource.includes(term.toLowerCase()));
+      })
       .map((entry) => entry.apiName);
     const missingApiDates = apiEntries
       .filter((entry) => !sourceRepresentsDate(source.html, entry.shutdownDate))
       .map((entry) => `${entry.apiName}: ${entry.shutdownDate}`);
     const missingApiReplacements = apiEntries
-      .filter((entry) => entry.replacement && !source.html.includes(entry.replacement))
+      .filter(
+        (entry) =>
+          entry.replacement && !lowerCaseSource.includes(entry.replacement.toLowerCase()),
+      )
       .map((entry) => `${entry.apiName}: ${entry.replacement}`);
     const previous = baseline?.providers?.[provider];
     const tokenDrift = differences(signals.modelTokens, previous?.modelTokens ?? []);
@@ -194,7 +249,7 @@ for (const [provider, definition] of Object.entries(sources)) {
       missingApiNames.length > 0 ||
       missingApiDates.length > 0 ||
       missingApiReplacements.length > 0;
-    if ((!writeBaseline && !previous) || baselineDrift || coverageFailure) {
+    if ((!writeBaseline && (!previous || baselineDrift)) || coverageFailure) {
       failed = true;
     }
 

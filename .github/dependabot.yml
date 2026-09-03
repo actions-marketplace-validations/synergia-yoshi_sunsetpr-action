@@ -7,6 +7,9 @@ updates:
     open-pull-requests-limit: 3
     labels:
       - dependencies
+    groups:
+      development-dependencies:
+        dependency-type: development
   - package-ecosystem: github-actions
     directory: /
     schedule:
@@ -14,3 +17,7 @@ updates:
     open-pull-requests-limit: 3
     labels:
       - dependencies
+    groups:
+      github-actions:
+        patterns:
+          - "*"

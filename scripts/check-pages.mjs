@@ -56,7 +56,12 @@ for (const entry of database.entries) {
   const file = path.join("_site/models", encodeURIComponent(entry.modelId), "index.html");
   await access(file);
   const page = await readFile(file, "utf8");
-  for (const expected of [entry.modelId, entry.shutdownDate, entry.replacement, entry.sourceUrl]) {
+  for (const expected of [
+    entry.modelId,
+    entry.shutdownDate ?? "Not announced",
+    entry.replacement,
+    entry.sourceUrl,
+  ]) {
     if (!page.includes(expected.replaceAll("&", "&amp;"))) {
       throw new Error(`${file} does not contain expected lifecycle evidence`);
     }
